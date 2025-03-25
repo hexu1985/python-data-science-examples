@@ -14,6 +14,9 @@
     - [Python数据可视化之matplotlib精进](Matplotlib.Enchance)
     - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
 
++ 机器学习
+
 + 深度学习
     - [深度学习入门：基于Python的理论与实现](Deep.Learning.From.Scratch)
+    - [Pytorch深度学习指南](Pytorch.Step.By.Step)
 
