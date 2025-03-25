@@ -13,3 +13,7 @@
     - [Python数据可视化之matplotlib实践](Matplotlib.Practice)
     - [Python数据可视化之matplotlib精进](Matplotlib.Enchance)
     - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
+
++ 深度学习
+    - [深度学习入门：基于Python的理论与实现](Deep.Learning.From.Scratch)
+
