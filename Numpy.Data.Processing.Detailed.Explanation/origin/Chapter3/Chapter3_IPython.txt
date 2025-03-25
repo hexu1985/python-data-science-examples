@@ -1,0 +1,1120 @@
+Chapter 3 NumPy数学函数应用
+----------------------------------------
+3.1 NumPy中的数学函数和常量
+----------------------------------------
+3.1.1 四则运算
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([0, 1, 2, 3, 4])
+
+In [3]:b = np.array([2, 4, 6, 8, 10])
+
+In [4]:a + b # 将两个数组相加会返回将每个元素相加后得到的结果
+
+In [5]:a + 4 #给每个元素加4
+
+In [6]:np.add(a ,b) # 使用函数也可以完成同样的计算
+
+In [7]:np.add(a, 4)
+
+In [8]:a - b # 使用之前生成的a和b
+
+In [9]:b - a
+
+In [10]:a - 4 #  将每个元素减去4
+
+In [11]:np.subtract(a, b) # 减法也可以使用函数实现
+
+In [12]:np.subtract(a, 4)
+
+In [13]:a * b
+
+In [14]:a * 2
+
+In [15]:np.multiply(a, b)
+
+In [16]:np.multiply(a, 2)
+
+In [17]:b / a # 虽然是计算b÷a的结果，但是由于a的元素中包含0，因此其中一个结果是表示无限的inf
+
+In [18]:b / 2 #  尝试除以2
+
+In [19]:b / 3 # 尝试除以3
+
+In [20]:np.divide(b, a) #  使用函数也可以完成相同的处理
+
+In [21]:np.divide(b, 2)
+
+In [22]:b // 3
+
+In [23]:b % 3
+
+In [24]: np.mod(b, 3) # 除以3得到的余数
+
+
+3.1.2 幂运算 （np.power） 和求平方根运算 （np.sqrt）
+----------------------------------------
+In [25]:np.power(2, 3) #  计算2的三次方
+
+In [26]:2**3 # 这个是Python的幂运算
+
+In [27]:a = np.arange(1, 11, 1)
+
+In [28]:b = np.array([1, 2, 1, 2, 1, 2, 1, 2, 1, 2])
+
+In [29]:a
+
+In [30]:b
+
+In [31]:np.power(a, b) # 一次方和二次方的值交替出现
+
+In [32]:a ** b #  同样的
+
+In [33]:np.sqrt(2) #  计算平方根使用np.sqrt函数
+
+In [34]:2 ** 0.5 # 当然，不使用函数也一样可以计算平方根
+
+In [35]:np.sqrt(a) # 当然也可以指定使用数组
+
+3.1.3 三角函数
+----------------------------------------
+In [36]:np.sin(0)
+
+In [37]:np.cos(0)
+
+In [38]:np.tan(0)
+
+In [39]:np.sin(np.pi*0.5) #  π/2时，正弦值为1
+
+In [40]:np.cos(np.pi*0.5) # 结果应当为0
+
+In [41]:np.tan(np.pi*0.5) # 无限发散的值
+
+In [42]:np.sin(1)
+
+In [43]:np.cos(1)
+
+In [44]:np.tan(1)
+
+In [45]:np.arcsin(0.5)
+
+In [46]:np.arccos(0.5)
+
+In [47]:np.arctan(1.0)
+
+In [48]:np.arcsin(-1.0)
+
+In [49]:np.arccos(-1.0)
+
+In [50]:np.arctan(-0.5)
+
+In [51]:np.radians(120)
+
+In [52]:np.deg2rad(120)
+
+In [53]:np.rad2deg(3.14)
+
+In [54]:np.deg2rad(np.rad2deg(2.3))
+
+In [55]:%timeit np.radians(24)
+
+In [56]:%timeit np.deg2rad(24)
+
+3.1.4 指数函数与对数函数
+----------------------------------------
+In [57]:np.exp(1) #  一次方
+
+In [58]:np.exp(2)
+
+In [59]:np.exp(0)
+
+In [60]:np.log(np.e) #  np.e为纳皮尔常数e
+
+In [61]:a = np.array([1., 2., np.e**2, 10])
+
+In [62]:np.log(a) #也可以指定使用数组（其他数学函数也是类似的）
+
+In [63]:b = np.array([1., 2., 4., 7])
+
+In [64]:np.log2(b)
+
+In [65]:c = np.array([1., 10., 20., 100])
+
+In [66]:np.log10(c)
+
+In [67]:np.log1p(a)
+
+In [68]:np.log(2)/np.log(4) # log4(2)可以使用这句代码实现（4为底）
+
+In [69]:np.log(9)/np.log(3) #  log3(9)（3为底）
+
+3.1.5 双曲函数（hyperbolic）
+----------------------------------------
+In [70]:np.sinh(2)
+
+In [71]:np.cosh(2)
+
+In [72]:np.tanh(2)
+
+In [73]:np.sinh(-1)
+
+In [74]:np.cosh(-1)
+
+In [75]:np.tanh(-1)
+
+In [76]:np.arcsinh(2)
+
+In [77]:np.arccosh(1)
+
+In [78]:np.arctanh(0.7)
+
+3.1.6 　向下舍入、向上舍入、四舍五入
+----------------------------------------
+In [79]:a = np.array([-1.8, -1.4, -1.0, -0.6, -0.2, 0., 0.2, 0.6, 1.0, 1.4, 1.8])
+In [80]:np.floor(a) #  向下取整(取值比其小的整数)
+
+In [81]:np.trunc(a) #  向下取整(舍去小数部分)
+
+In [82]:np.ceil(a) # 向上取整（取值比其大的整数)
+
+In [83]:np.round(a) # 四舍五入
+
+In [84]:np.around(a) #  四舍五入
+
+In [85]:np.rint(a) # 四舍五入
+
+In [86]:np.fix(a) # 取最接近0的整数
+
+3.1.7 　复数
+----------------------------------------
+In [87]:a = 1 + 2j # 复数1 + 2j
+
+In [88]:b = -2 + 1j #  复数‐2 + 1j，不要忘记写1
+
+In [89]:np.real(a) # a的实部为1
+
+In [90]:np.imag(a) #  a的虚部为2
+
+In [91]:a+b # 与复数计算相同，对实部和虚部分别进行加法运算
+
+In [92]:a*b
+
+In [93]:a/b
+
+In [94]:np.conj(a) #  返回共轭复数
+
+3.1.8 绝对值
+----------------------------------------
+In [95]:a = -2.5
+
+In [96]:np.absolute(a)
+
+In [97]:np.fabs(a)
+
+In [98]:b = -2 + 3j #  尝试使用复数进行计算
+
+In [99]:np.abs(b) # np.abs是np.absolute的缩写形式
+
+In [100]:np.fabs(b) # np.fabs函数不支持对复数绝对值的计算
+
+In [101]:c = np.array([-1, 2, -8, 12, 1+2j])
+
+In [102]:np.abs(c) #  返回每个元素的绝对值
+
+3.1.9 数学常数的调用
+----------------------------------------
+In [103]:np.e
+
+In [104]:np.pi
+
+3.2 计算元素平均值的函数
+----------------------------------------
+3.2.1 np.average
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([33, 44, 54, 23, 25, 55, 32, 76]) #  创建一个合适的数组
+
+In [3]:np.average(a) # 首先计算a的平均值
+
+In [4]:a = a.reshape(2, 4) #改变a的shape
+
+In [5]:a
+
+In [6]:np.average(a) #无论a的shape如何变化，只要没有指定axis参数，返回的就是一个标量值
+
+In [7]:np.average(a, axis=0) # 指定坐标轴(axis)参数。二维数组指定axis=0，就是计算行方向上的平均值
+
+
+In [8]:np.average(a, axis=1) # 指定axis = 1时计算的是列方向上的平均值
+
+In [9]:b = np.random.rand(24).reshape(2, 3, 4) # 接下来计算三维数组的平均值
+
+In [10]:b
+
+In [11]:np.average(b, axis=0) #对分为两个大的数组中的元素分别计算平均值
+
+In [12]:np.average(b, axis=1) #  计算行方向上的平均值
+
+In [13]:np.average(b, axis=2) # 计算列方向上的平均值
+
+In [14]:a = a.flatten() #将a扁平化为一维数组
+
+In [15]:w = np.array([0.1, 0.05, 0.2, 0.0, 0.0, 0.4, 0.2, 0.05]) # 设置权重
+In [16]:np.average(a, weights=w) #  计算带权重的平均值
+
+In [17]:w2 = np.array([0.2, 0.8])
+
+In [18]:a = a.reshape(2, 4) # 再次对a进行扁平化操作
+
+In [19]:np.average(a, axis=0, weights=w2) #  当所指定的坐标轴方向上的元素数量相同，且权重数组是一维数组时，广播机制将被触发
+
+In [20]:np.average(a, returned="True") #  如果不设置权重，则每个元素默认的权重就为1.0，因此权重的合计值就与元素数量相等
+
+In [21]:a = a.flatten() #  将a扁平化为一维数组
+
+In [22]:a
+
+In [23]:w
+
+In [24]:np.average(a, weights=w, returned="True") # 在这个状态下执行，就会显示平均值和权重合计
+
+3.2.3 np.ndarray.mean
+----------------------------------------
+In [25]:np.random.seed(1)
+
+In [26]:a = np.random.randint(0, 10, 20) #  生成20个0～9的随机整数
+
+In [27]:a
+
+In [28]:np.mean(a) #  计算平均值
+
+In [29]:a.mean() # 使用np.ndarray.mean形式的调用
+
+In [30]:b = a.reshape(4, 5) #将a变形为4×5的二维数组，并代入到变量b中
+
+In [31]:b
+
+In [32]:np.mean(b) #即使改变shape，结果也是一样的
+
+In [33]:b.mean()
+
+In [34]:np.mean(b, axis=0) #在行方向上求平均，也就是计算每列的平均值
+
+In [35]:np.mean(b, axis=1) # 在列方向上求平均，也就是计算每行的平均值
+
+In [36]:c = np.random.rand(24).reshape((2, 3, 4)) #  尝试计算三维数组的平均值
+
+In [37]:c # 生成24个0~1的随机数
+
+In [38]:np.mean(c, axis=0) #  在有3个坐标轴（axis）的数组中，指定axis=0将数组分成两个二维数组，并对这两个数组中对应的元素计算平均值
+
+In [39]:np.mean(c, axis=1) #  这是有两个坐标轴的情况下的行方向，也就是对每列元素计算平均值
+
+In [40]:np.mean(c, axis=2) # 这是有两个坐标轴的情况下的列方向，也就是对每行元素计算平均值
+
+In [41]:d = np.random.rand(1000) # 生成1000个随机数
+
+In [42]:d.dtype #  确认dtype
+
+In [43]:np.mean(d) # 首先在不指定dtype的前提下计算平均值
+
+In [44]:np.mean(d, dtype="float32") # 将比特数减少一半，并重新计算平均值
+
+In [45]:np.mean(d, dtype="float16") # 再将比特数减少一半，并重新计算平均值
+
+In [46]:b # 使用二维数组b
+
+In [47]:e = np.mean(b, keepdims=True) # 维度不会降低
+
+In [48]:e
+
+In [49]:e.shape
+
+In [50]:f = np.mean(b, keepdims=False)
+
+In [51]:f
+
+In [52]:g = np.mean(b, axis=1, keepdims=True)
+
+In [53]:g
+
+In [54]:g.shape
+
+In [55]:h = np.mean(b, axis=1, keepdims=False)
+
+In [56]:h
+
+In [57]:h.shape
+
+3.3 计算元素中位数的函数
+----------------------------------------
+3.3.2 np.median
+----------------------------------------
+In [1]:import numpy as np # 导入numpy模块
+
+In [2]:a = np.random.randint(100, size=(2, 3, 4)) # 生成2×3×4的三维随机数组
+
+In [3]:a # 确认数组中的内容
+
+In [4]:np.median(a) # 将所有的元素作为对象，计算中位数
+
+In [5]:np.median(a, axis=2) # 沿着axis=2的坐标轴方向计算中位数
+
+In [6]:np.median(a, axis=1) #  指定axis=1
+
+In [7]:np.median(a, axis=(1, 2)) # 如果指定两个axis，就会在二维空间中计算中位数
+
+In [8]:b = a.copy()
+
+In [9]:b
+
+In [10]:np.median(b, axis=1, overwrite_input=True)
+
+In [11]:np.all(a==b) #  确认a和b的所有元素是否一致
+
+In [12]:a
+
+In [13]:b # 与a的排列顺序不一样，这证明已经执行了破坏性操作
+
+In [14]:b = a.copy()
+
+In [15]:%timeit np.median(a, axis=1)
+
+In [16]:%timeit np.median(b, axis=1, overwrite_input=True)
+
+In [17]:c = np.random.randn(10000) # 用大的数组进行比较
+
+In [18]:%timeit np.median(a)
+
+In [19]:d= c.copy()
+
+In [20]:%timeit np.median(b, overwrite_input=True)
+
+In [21]:np.median(a, axis=0, keepdims=True) #输出三维数组
+
+In [22]:np.median(a, axis=1, keepdims=False) # 指定axis=1，比较指定True和False时的区别
+
+In [23]:np.median(a, axis=1, keepdims=True)
+
+In [24]:np.median(a, axis=(0, 2), keepdims=True)
+
+3.4 元素的求和函数
+----------------------------------------
+3.4.1 np.sum
+----------------------------------------
+In [1]:import numpy as np #  导入numpy模块
+
+In [2]:a = np.random.randint(0, 10, size=(2,5))
+
+In [3]:a # 2×5的0～9的随机数组
+
+In [4]:np.sum(a) # 对所有元素进行求和计算
+
+In [5]:b = np.array([2, 4, 1, 6]) #  当然一维数组也可以进行计算
+
+In [6]:np.sum(b)
+
+In [7]:c = np.random.randint(0, 10, size=(2, 4, 5)) # 尝试对三维数组进行计算
+
+In [8]:c
+
+In [9]:np.sum(c)
+
+In [10]:a # 使用与前面相同的二维数组
+
+In [11]:np.sum(a, axis=0) # 在行方向求和
+
+In [12]:np.sum(a, axis=1) # 在列方向求和
+
+In [13]:c #对三维数组求和
+
+In [14]:np.sum(c, axis=0)
+
+In [15]:np.sum(c, axis=1)
+
+In [16]:np.sum(c, axis=2)
+
+In [17]:np.sum(c, axis=0, keepdims=True) # 指定keepdims=True，就会输出三维数组
+
+In [18]:np.sum(c, axis=1, keepdims=True)
+
+In [19]:np.sum(c, axis=2, keepdims=True)
+
+In [20]:np.sum(a, dtype='int8') #  数据类型指定为int8
+
+In [21]:np.sum(a, axis=0, dtype='float') # 数据类型指定为float
+
+3.4.2 np.ndarray.sum
+----------------------------------------
+In [22]:a # 使用与前面相同的数组
+
+In [23]:b
+
+In [24]:c
+
+In [25]:a.sum() #  首先进行简单的求和计算
+
+In [26]:b.sum()
+
+In [27]:c.sum()
+
+In [28]:a.sum(axis=0) #  指定axis
+
+In [29]:c.sum(axis=0)
+
+In [30]:c.sum(axis=2)
+
+In [31]:a.sum(axis=0, keepdims=True) # 指定keepdims=True
+
+In [32]:c.sum(axis=2, keepdims=True)
+
+In [33]:a.sum(axis=0, dtype='float') # 指定dtype
+
+3.5 计算标准差的函数
+----------------------------------------
+3.5.2 np.std
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.random.rand(10) # 首先创建随机数组
+
+In [3]:a #  确认数组中的内容
+
+In [4]:np.std(a) # 计算标准差
+
+In [5]:b = np.random.rand(2, 3, 4) #  在这里生成三维数组
+る
+In [6]:b
+
+In [7]:np.std(b, axis=0) # 沿着axis=0的方向计算标准差，结果为3×4的二维数组
+
+In [8]:np.std(b, axis=(0, 1)) #  同时指定两个axis，就是在这两个坐标轴所展开的平面内计算标准差
+
+In [9]:np.std(b, axis=(0, 1, 2))
+
+In [10]:np.std(b, dtype='float16')
+
+In [11]:np.std(b, dtype='complex')
+
+In [12]:c = np.empty((2, 3)) #  准备用于保存的数组(在这里使用np.empty)
+
+In [13]:np.std(b, axis=2, out=c) # 参数out指定为c
+
+In [14]:c #结果被完整地保存在c中
+
+In [15]:np.std(b) # 首先显示原有的值(ddof=0)
+
+In [16]:np.std(b, ddof=1) # 然后指定ddof=1，显示无偏标准差
+
+In [17]:np.std(b, keepdims=True) #  若指定keepdims=True，就会返回三维数组
+
+In [18]:np.std(b, axis=0, keepdims=True) # 指定axis
+
+In [19]:b / np.std(b, axis=0, keepdims=True) #  可以这样使用广播功能
+
+In [20]:b / np.std(b, axis=0, keepdims=False) # 即使指定False，有时也可以顺利执行
+
+In [21]:b / np.std(b, axis=1, keepdims=False) # 如果改变axis的设置，可能会发生运行时错误
+
+3.6 计算方差的函数
+----------------------------------------
+3.6.2 np.var
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([10, 20, 12, 0, 3, 5])
+
+In [3]:np.var(a) # 如果不特地指定参数，将根据这6个数据计算方差
+
+In [4]:b = np.random.randint(20, size=(3,4))
+
+In [5]:b #  确认b中的内容
+
+In [6]:np.var(b) # 如果不指定axis，就会计算整体的方差
+
+In [7]:np.var(b, axis=0) # 计算每行的方差
+
+
+In [8]:np.var(b, axis=1) # 计算每列的方差
+
+In [9]:np.var(b, axis=(0, 1)) # 如果像左边这样编写代码，就可以在第0、1号的坐标轴方向上进行计算，对所有范围内的方差进行计算
+
+In [10]:c = np.random.randn(100).reshape(5, 20) # 生成服从正态分布的随机数组
+
+In [11]:c.dtype #  确认数据类型
+
+In [12]:c
+
+In [13]:np.var(c, dtype='float32') #  指定dtype
+
+In [14]:np.var(c, dtype='float64')
+
+In [15]:d = np.random.randn(10) # 使用10个样本数据进行计算
+
+In [16]:d
+
+In [17]:np.var(d, ddof=0) #首先使用默认值ddof=0对样本方差进行计算
+
+In [18]:np.var(d, ddof=1) #  接着对无偏方差进行计算
+
+In [19]:e = np.random.randn(5) # 进一步减少样本数量
+
+In [20]:e
+
+In [21]:np.var(e)
+
+In [22]:np.var(e, ddof=1) # 逼近于1
+
+In [23]:f = np.random.randint(20, size=(2, 5, 10)) #  随机的三维数组
+
+In [24]:f
+
+In [25]:f_var = np.var(f, axis=1) #  计算每一行的方差
+
+In [26]:f/f_var #  这样设置是不能正确使用广播功能的
+
+In [27]:f_var.shape #  尝试确认shape
+
+In [28]:f_var = np.var(f, axis=1, keepdims=True)
+
+In [29]:f/f_var #  将keepdims指定为True，就可以顺利地进行计算
+
+3.7 计算协方差的函数
+----------------------------------------
+3.7.1 　协方差
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:import matplotlib.pyplot as plt
+
+In [3]:mean = np.array([0, 0]) #  指定平均值
+
+In [4]:cov = np.array([
+...:[1, 0.1],
+...:[0.1, 1]]) #  指定协方差矩阵。修改0.1所在的位置，就可以改变x和y的协方差的值
+
+------------------
+In [4]:可以利用的文本
+------------------
+cov = np.array([
+[1, 0.1],
+[0.1, 1]]) # 指定协方差矩阵。修改0.1所在的位置，就可以改变x和y的协方差的值
+------------------
+
+In [5]:x, y = np.random.multivariate_normal(mean, cov, 5000).T #  暂且生成5000个
+
+In [6]:plt.plot(x, y, 'x') #  进行绘制
+
+In [7]:plt.title("covariance=0.1")
+
+In [8]:plt.axis("equal")
+
+In [9]:plt.show()
+
+In [10]:a = np.array([[10, 5, 2, 4, 9, 3, 2],[10, 2, 8, 3, 7, 4, 1]]) #  将第一行作为每个学生的数学分数，第二行作为每个学生的语文分数(满分都是10分)
+
+In [11]:np.cov(a) # 首先只指定参数
+
+In [12]:c = np.array([3, 2, 1, 5, 7, 2, 1]) # 其次添加英语的分数
+
+In [13]:np.cov(a,c) # 返回数学、语文、英语的协方差矩阵
+
+In [14]:a_transpose = a.T #  列与行进行替换
+
+In [15]:c_transpose = np.reshape(c, (-1, 1))
+
+In [16]:np.cov(a_transpose, y=c_transpose, rowvar=False)# 从初始值开始计算
+
+In [18]:np.cov(a, bias=True) # 因为是除以N，所以值会逐渐减少
+
+In [19]:np.cov(a, ddof=None)
+
+In [20]:np.cov(a, ddof=0)
+
+In [21]:np.cov(a, ddof=1)
+
+In [22]:np.cov(a, ddof=2)
+
+In [23]:a
+
+In [24]:fweights = np.array([1, 2, 2, 1, 1, 1, 1]) #需要重视从左边开始的第2、3名学生的分数
+
+In [25]:np.cov(a, fweights=fweights)
+
+In [26]:aweights= np.array([0.1, 0.2, 0.2, 0.2, 0.1, 0.1, 0.1]) #需要重视第2、3、4名学生的分数
+
+In [27]:np.cov(a, aweights=None)
+
+In [28]:np.cov(a, aweights=aweights)
+
+3.8 计算相关系数的函数
+----------------------------------------
+3.8.2 定义
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:import matplotlib.pyplot as plt
+
+In [3]:mean = np.array([0, 0]) # 指定平均
+
+In [4]:cov = np.array([
+...:[1, 0.8],
+...:[0.8, 1]]) #  指定协方差矩阵。将两个0.8的位置修改为任意r的值，就可以改变x和y的协方差的值
+
+------------------
+In [4]:可以利用的矩阵
+------------------
+cov = np.array([
+[1, 0.8],
+[0.8, 1]]) #  指定协方差矩阵。将两个0.8的位置修改为任意r的值，就可以改变x和y的协方差的值
+------------------
+
+In [5]:x, y = np.random.multivariate_normal(mean, cov, 5000).T # 暂且生成5000个
+
+In [6]:plt.plot(x, y, 'x') #  绘制图表。'x'用于指定绘制的风格，x符号会被绘制出来
+
+In [7]:plt.title("r=0.8")
+
+In [8]:plt.axis("equal") # 将各个坐标轴上刻度的间隔统一
+
+In [9]:plt.show()
+
+3.8.3 np.corrcoef
+----------------------------------------
+In [10]:import numpy as np
+
+In [11]:x = np.array([
+...:[1, 2, 1, 9, 10, 3, 2, 6, 7],
+...:[2, 1, 8, 3, 7, 5, 10, 7, 2]]) #  第一行为数学成绩，第二行为语文成绩
+
+------------------
+In [11]:可利用的文本
+------------------
+x = np.array([
+[1, 2, 1, 9, 10, 3, 2, 6, 7],
+[2, 1, 8, 3, 7, 5, 10, 7, 2]]) #  第一行为数学成绩，第二行为语文成绩
+------------------
+
+In [12]:np.corrcoef(x) # 计算相关矩阵，右上与左下的值为相关系数
+
+In [13]:y = np.array([2, 1, 1, 8, 9, 4, 3, 5, 7]) # 添加英语成绩
+
+In [14]:np.corrcoef(x, y) # 指定第二个参数y，即使不特意对3个科目的成绩进行连接，也可以对相关系数进行计算
+In [15]:x_transpose = x.T
+
+In [16]:np.corrcoef(x_transpose, rowvar=False) #  指定rowvar=False，求取每一列的相关系数
+
+In [17]:np.corrcoef(x_transpose, rowvar=True) #  如果指定rowvar=True(默认设置)，就是求取每一位学生的相关系数
+
+3.9 根据数组元素生成网格的函数
+----------------------------------------
+3.9.1 网格点
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:xx = np.array([[x for x in range(5)] for _ in range(5)])
+
+In [3]:xx
+
+In [4]:yy = np.array([[y for _ in range(5)] for y in range(5)])
+
+In [5]:yy
+
+3.9.2 np.meshgrid
+----------------------------------------
+In [6]:import numpy as np
+
+In [7]:a = np.array([0, 1, 2])
+
+In [8]:b = np.array([0, 4]) # 首先创建两个一维数组
+
+In [9]:aa, bb = np.meshgrid(a, b) # 从基本的操作开始执行
+
+In [10]:aa
+
+In [11]:bb
+
+In [12]:c = np.array([0, 9]) #  再增加一个新的数组
+
+In [13]:aaa, bbb, ccc = np.meshgrid(a, b, c) #  生成3个带有3个坐标轴的数组
+In [14]:aaa
+
+In [15]:bbb
+
+In [16]:ccc
+
+In [17]:aa2, bb2 = np.meshgrid(a, b, indexing='xy') # 首先从默认值xy开始执行
+
+In [18]:aa2
+
+In [19]:bb2
+
+In [20]:aa3, bb3 = np.meshgrid(a, b, indexing='ij') # 尝试指定为ij
+
+In [21]:aa3
+
+In [22]:bb3
+
+In [23]:aaa1, bbb1, ccc1 = np.meshgrid(a, b, c, indexing='xy') #  也同样对三维空间进行确认
+
+In [24]:aaa1
+
+In [25]:bbb1
+
+In [26]:ccc1
+
+In [27]:aaa2, bbb2, ccc2=np.meshgrid(a, b, c, indexing='ij') #  指定ij
+
+In [28]:aaa2
+
+In [29]:bbb2
+
+In [30]:ccc2
+
+In [31]:av, bv=np.meshgrid(a, b, sparse=True) # 这里会生成向量，类似av、bv这样添加后缀v是一般的做法
+
+In [32]:av
+
+In [33]:bv
+
+In [34]:aav, bbv, ccv=np.meshgrid(a, b, c, sparse=True) # 在三维空间也可以进行同样的操作
+
+In [35]:aav
+
+In [36]:bbv
+
+In [37]:ccv
+
+3.10 内积计算函数
+----------------------------------------
+3.10.3 np.dot
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([1, 2])
+
+In [3]:b = np.array([4, 3])
+
+In [4]:np.dot(a, b) # 首先计算二维向量之间的内积
+
+In [5]:np.dot(a, a) # 这样设置，向量的范数的平方就表示为计算结果
+
+In [6]:np.dot(4, 5) # 加入数字也可以进行点积计算
+
+In [7]:c = np.array([1j, 2j]) #  加入复数进行计算
+
+In [8]:d = np.array([4j, 3j])
+
+In [9]:np.dot(c, d)
+
+In [10]:np.dot(a, d)
+
+In [11]:e = np.matrix([1, 2])
+
+In [12]:f = np.matrix([4, 3])
+
+In [13]:np.dot(e, f) #如果使用np.matrix进行相同的计算，会发生运行时错误
+
+In [14]:f = np.matrix([[4], [3]]) #将f变换成列向量
+
+In [15]:np.dot(e, f) #就可以得到相同的计算结果
+
+In [16]:a = np.array([[1, 2], [3, 4]])
+
+In [17]:b = np.array([[4, 3], [2, 1]])
+
+In [18]:np.dot(a, b) # 计算2×2的矩阵之间的乘积
+
+In [19]:np.dot(b, a) #  将a和b的顺序进行颠倒，返回的矩阵也会不同
+
+In [20]:c = np.arange(9).reshape((3, 3))
+
+In [21]:d = np.ones((3, 3)) # 生成元素为1的3×3的数组
+
+In [22]:np.dot(c, d) #  3×3的矩阵之间也同样可以计算内积
+
+In [23]:a = np.arange(12).reshape((4, 3))
+
+In [24]:b = np.arange(16).reshape((4, 4))
+
+In [25]:np.dot(a, b) #  a的axis=1与b的axis=0不同，就不能进行计算
+
+In [26]:d = np.matrix([[0, 1, 2], [3, 4, 5], [6, 7, 8]]) #  创建将c和d变换成matrix后的矩阵
+
+In [27]:e = np.matrix([[1, 1, 1], [1, 1, 1], [1, 1, 1]])
+
+In [28]:np.dot(d, e)
+
+In [29]:result = np.zeros((2, 2)) #  事先创建用于保存结果的数组
+
+In [30]:a = np.arange(4).reshape(2, 2)
+
+In [31]:b = np.ones((2, 2))
+
+In [32]:a
+
+In [33]:np.dot(a, b, out=result)
+
+In [34]:result #  确认保存是否完整
+
+In [35]:np.dot(b, a, out=result) # 将输入a与b的顺序进行颠倒，也可以反映出值的变化
+
+3.11 计算行列式的函数
+----------------------------------------
+3.11.2 np.linalg.det
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:import numpy.linalg as LA # 通常是将linalg模块作为LA进行导入
+
+In [3]:a = np.array([[2, 3], [4, -1]])
+
+In [4]:a
+
+In [5]:LA.det(a) # 计算a的行列式
+
+In [6]:b = np.array([[1, 1], [2, 2]]) # 返回的是0行列式
+
+In [7]:b
+
+In [8]:LA.det(b)
+
+In [9]:c = np.array([[1-1j, 3j], [-3j, 1+2j]]) # 元素是复数也没有问题
+
+In [10]:c
+
+In [11]:LA.det(c)
+
+In [12]:d = np.random.randint(-5, 6, size=(3, 3, 3))
+
+In [13]:d
+
+In [14]:LA.det(d)
+
+3.12 计算矩阵的特征值和特征向量的函数
+----------------------------------------
+3.12.3 np.linalg.eig
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:import numpy.linalg as LA # 将linalg模块作为LA进行导入
+
+In [3]:a = np.array([[1, 0], [0, 2]]) # 首先从容易理解的对角矩阵开始计算
+
+In [4]:a
+
+In [5]:LA.eig(a)
+
+In [6]:b = np.array([[2, 5], [3, -8]]) # 然后对这个矩阵的特征值和特征向量进行计算
+
+In [7]:b
+
+In [8]:LA.eig(b)
+
+In [9]:c = np.random.randint(-10, 10, size=(3, 3)) # 尝试使用3×3的矩阵
+
+In [10]:w,v = LA.eig(c) #  这种情况下，w相当于特征值，v相当于特征向量
+
+In [11]:w
+
+In [12]:v
+
+In [13]:c = np.random.randint(-10, 10, size=(3, 3, 3)) #  尝试使用3×3的矩阵
+
+In [14]:c
+
+In [15]:w,v = LA.eig(c)
+
+In [16]:w
+
+In [17]:v
+
+3.13 计算矩阵的秩的函数
+----------------------------------------
+3.13.2 np.linalg.matrix_rank
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:A = np.array([[1, 1, 4, 0, 1],
+...:[0, 3, 1, 3, 2],
+...:[1, 3, 0, 0, 1],
+...:[2, 4, 3, 1, 1]]) # 定义矩阵A
+
+------------------
+In [2]:可利用的文本
+------------------
+A = np.array([[1, 1, 4, 0, 1],
+[0, 3, 1, 3, 2],
+[1, 3, 0, 0, 1],
+[2, 4, 3, 1, 1]]) # 定义矩阵A
+------------------
+
+In [3]:np.linalg.matrix_rank(A) #  确认矩阵的秩
+
+In [4]:B = np.array([
+...:[1, 2, 3, 0],
+...:[2, 4, 6, 0],
+...:[1, 0, 1, 2],
+...:[1, 0, 0, 3]]) # 使第一行与第二行的值的比值相等
+
+------------------
+In [2]:可利用的文本ト
+------------------
+B = np.array([
+[1, 2, 3, 0],
+[2, 4, 6, 0],
+[1, 0, 1, 2],
+[1, 0, 0, 3]]) #使第一行与第二行的值的比值相等
+------------------
+
+In [5]:np.linalg.matrix_rank(B) # 计算矩阵的秩
+
+3.14 计算逆矩阵的函数
+----------------------------------------
+3.14.3 np.linalg.inv
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.random.randint(-9, 10, size=(2, 2)) # 首先从2×2的矩阵开始计算
+
+In [3]:a
+
+In [4]:np.linalg.inv(a) #  计算逆矩阵
+
+In [5]:np.dot(a, np.linalg.inv(a)) #  计算乘积并确认其是否会变成单位矩阵
+
+In [6]:b = np.random.randint(-10, 10, size=(3, 3)) #  接下来对3×3的矩阵进行计算
+
+In [7]:b
+
+In [8]:c = np.linalg.inv(b)
+
+In [9]:c
+
+In [10]:np.dot(b, c) # 计算乘积
+
+In [11]:np.dot(c, b) #  即使顺序颠倒，其计算结果也基本不会发生变化（因为除了对角线上的元素之外，其他的值的大小几乎等于零。e–17表示10的
+# –17次方)
+
+In [12]:d = np.random.randint(-10, 10, size=(4, 3, 3)) # 4个3×3的矩阵
+
+In [13]:d
+
+In [14]:e = np.linalg.inv(d) # 计算逆矩阵
+
+In [15]:e
+
+In [16]:np.dot(d, e) #  尝试计算乘积
+
+3.15 计算外积的函数
+----------------------------------------
+3.15.2 np.outer
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([1, 2, 3, 2, 1])
+
+In [3]:b = np.array([0, 2, 4, 6, 8, 1]) # 创建两个一维数组
+
+In [4]:np.outer(a, b) # 计算外积
+
+In [5]:a.shape # 确认各自的Shape
+
+In [6]:b.shape
+
+In [7]:np.outer(a, b) #完全变成了(M,N)
+
+In [8]:np.outer(a, b).shape #  完全变成了(M,N)
+
+In [9]:np.outer(a, b) == a.reshape(-1, 1) * b # 使用广播功能也可以进行同样的计算
+
+In [10]:b = b.reshape(2, -1)
+
+In [11]:c = np.random.randint(0, 5, size=(2, 4))
+
+In [12]:b
+
+In [13]:c
+
+In [14]:np.outer(b, c)
+
+In [15]:np.outer(b.ravel(), c.ravel()) # 即使指定转换为一维数组后的数组，其结果也是一样的
+
+3.16 计算叉积的函数
+----------------------------------------
+3.16.2 np.cross
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([1, 2, 3])
+
+In [3]:b = np.array([5, 4, 0])
+
+In [4]:np.cross(a, b) # 首先，在不进行任何指定的情况下尝试执行
+
+In [5]:c = np.array([-1, 1, 3])
+
+In [6]:d = np.array([2, 3, 3])
+
+In [7]:np.cross(c, d) #  使用其他的组合进行尝试
+
+In [8]:b_2 = np.array([5, 4])
+
+In [9]:np.cross(a, b_2)
+
+In [10]:ac = np.vstack((a, c))
+
+In [11]:bd = np.vstack((b, d)) # 在axis=0方向连接
+
+In [12]:ac
+
+In [13]:bd
+
+In [14]:np.cross(ac, bd) # 计算叉积
+
+In [15]:ac_2 = ac.transpose() # 进行转置
+
+In [16]:ac_2
+
+In [17]:np.cross(ac_2, bd) #  由于ac和bd的shape是不同的，因此如果不指定axisa或axisb，就会出现运行时错误
+
+In [18]:np.cross(ac_2, bd, axisa=0) # 因为a和c保存在axis=0方向上，所以指定axisa=0，可以顺利执行代码
+
+In [19]:bd_2 = bd.transpose()
+
+In [20]:bd_2
+
+In [21]:np.cross(ac, bd_2, axisb=0)
+
+In [22]:np.cross(ac, bd, axisc=1) # 这里的结果没有发生变化
+
+In [23]:np.cross(ac, bd, axisc=0) # 返回经过转置的数组
+
+In [24]:np.cross(ac_2, bd_2, axis=0)
+
+In [25]:np.cross(np.array([1, 1, 1, 1]), np.array([1, 1, 1, 1]))
+
+In [26]:np.cross(np.array([1]), np.array([1])) #  即使元素数量为1，也会发生运行时错误
+
+3.17 计算卷积积分和移动平均的函数
+----------------------------------------
+3.17.1 np.convolve
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([0, 1, 2, 3, 4, 5]) #  数组a
+
+In [3]:v = np.array([0.2, 0.8]) # 数组v
+
+In [4]:np.convolve(a, v, mode='same') # 首先从'same'开始
+
+In [5]:np.convolve(a, v, mode='full') # 这里是默认设置的状态
+
+In [6]:np.convolve(a, v, mode='valid') # 指定mode='valid'的情况
+
+对包含噪声数据的平滑处理
+----------------------------------------
+［终端窗口］
+$ python sinewave.py

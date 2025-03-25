@@ -1,0 +1,1760 @@
+Chapter2 NumPy与数组操作
+----------------------------------------
+2.1 数组形状变换函数
+----------------------------------------
+2.1.1 np.reshape
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.arange(12) #  创建一个一维数组
+
+In [3]:a
+
+In [4]:b = np.reshape(a, (3, 4)) # 变形为3×4的二维数组
+
+In [5]:b # 确认变形是否成功
+
+In [6]:b[0, 1] = 0 # 更改其中一个元素的值
+
+In [7]:b
+
+In [8]:a # a中相应元素的值也发生了变化
+
+In [9]:c = np.arange(12) # 再次创建相同的数组
+
+In [10]:d = np.reshape(c, (3,4), order='C') # 通过指定order参数，可以改变元素的排列顺序
+
+In [11]:d #  'C'为默认设置，因此输出的结果仍然是一样的
+
+In [12]:d = np.reshape(c, (3, 4), order='F') # 如果将order设置为'F'，则首先对高维度元素的索引进行变形
+
+In [13]:d
+
+In [14]:np.reshape(c, (3, 5)) #如果变形后的数组的shape与元素数量不匹配，就会导致运行时错误发生
+
+In [15]:a = np.arange(12) # 再次创建同一数组
+
+In [16]:np.reshape(a, (3, -1)) #  将shape指定为(n, –1)，就会得到n×m（m是对数组中元素数量进行适配得到的值）的数组
+
+In [17]:np.reshape(a, (-1, 6)) # 尝试设置不同的值
+
+In [18]:a = np.arange(12).reshape((3, 4))
+
+In [19]:a
+
+In [20]:b = np.arange(12).reshape((3, -1)) # 也可以使用-1
+
+In [21]:b
+
+In [22]:c = np.arange(15).reshape((3, 4)) # 如果元素数量与输出的数组不同，就会导致运行时发生错误
+
+2.1.2 np.resize
+----------------------------------------
+In [23]:a = np.arange(12)
+
+In [24]:np.reshape(a, (3, 4)) # 首先创建一个3×4的二维数组
+
+In [25]:np.resize(a, (3, 5)) #  当数组的尺寸大于元素数量时，原有的元素会被重复使用
+
+In [26]:np.resize(a, (3, 2)) # 当数组的尺寸小于元素数量时，原有的元素不会全部被使用
+
+In [27]:b = np.resize(a, (3, 4))
+
+In [28]:b[0, 1] = 0 # 修改数组中的元素
+
+In [29]:b
+
+In [30]:a # 原有数组中的元素并没有同时被修改
+
+2.1.3 ndarray.resize
+----------------------------------------
+In [31]:a = np.arange(12) #  创建一个变形前的数组
+
+In [32]:a.resize((3, 4)) # 变形
+
+In [33]:a
+
+In [34]:a.resize((3, 5)) #  和之前的np.resize函数调用不同，变形后的数组的shape与元素数量不匹配，因此会导致运行时错误发生
+In [35]:a.resize((3, 5), refcheck=False) #  将参数refcheck指定为False，程序会自动匹配数组的形状并填充相应的元素值。但是，对
+# 于欠缺的元素使用0值进行填充
+
+In [36]:a
+
+In [37]:b = np.arange(12) #  再次创建一个新的数组
+
+In [38]:c = b #  将b代入c中
+
+In [39]:c.resize((3, 4)) #只对c进行变形
+
+In [40]:c
+
+In [41]:b #  对数组c所做的改动也会被反映到数组b中
+
+----------------------------------------
+2.2 添加元素到数组末尾的函数
+----------------------------------------
+2.2.1 Python列表的append方法
+----------------------------------------
+In [1]:a = [1, 2, 3]
+
+In [2]:a.append(2)
+
+In [3]:a
+
+In [4]:a = [1, 2, 3]
+
+In [5]:a.extend([4, 5, 6])
+
+In [6]:a
+
+2.2.2 np.append
+----------------------------------------
+In [7]:import numpy as np
+
+In [8]:a = np.arange(12)
+
+In [9]:np.append(a, [6, 4, 2]) # 在a的末尾添加元素
+
+In [10]:b = np.arange(12).reshape((3, 4))
+
+In [11]:b
+
+In [12]:np.append(b, [1, 2, 3, 4]) # 如果不指定axis，返回的就是一维数组
+
+In [13]:b
+
+In [14]:np.append(b, [[12, 13, 14, 15]], axis=0)
+
+In [15]:np.append(b, [12, 13, 14, 15], axis=0) # shape不一致时，会导致运行时产生错误
+
+In [16]:c = np.arange(12).reshape((3, 4))
+
+In [17]:c
+
+In [18]:d = np.linspace(0, 26, 12).reshape(3, 4) # 这次创建和c一样shape的数组
+
+In [19]:d
+
+In [20]:np.append(c,d, axis=0) #  指定axis为0时，将在行方向上对元素进行添加
+
+In [21]:np.append(c, d, axis=1) #  指定axis为1时，将在列方向上对元素进行添加
+
+In [22]:def np_append():
+...:    a = np.array([1, 2, 3])
+...:    for i in range(10000):
+...:        a = np.append(a, [i])
+...:    return a
+
+------------------
+In [22]:编写同样的代码，对ndarray与Python的列表的性能进行比较。
+------------------
+def np_append():
+    a = np.array([1, 2, 3])
+    for i in range(10000):
+        a = np.append(a, [i])
+    return a
+------------------
+
+In [23]:def list_append():
+...:    a = [1, 2, 3]
+...:    for i in range(10000):
+...:        a.append(i)
+...:    return np.array(a)
+
+------------------
+In [23]:编写同样的代码，对ndarray与Python的列表的性能进行比较。
+------------------
+def list_append():
+    a = [1, 2, 3]
+    for i in range(10000):
+        a.append(i)
+    return np.array(a)
+------------------
+
+In [24]:%timeit np_append()
+
+In [25]:%timeit list_append()
+
+2.3 数组的真假值判断函数
+----------------------------------------
+2.3.1 np.all
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([
+...:[1, 1, 1],
+...:[1, 0, 0],
+...:[1, 0, 1],
+...:])
+
+------------------
+In [2]:容易利用的文本
+------------------
+a = np.array([
+[1, 1, 1],
+[1, 0, 0],
+[1, 0, 1],
+])
+------------------
+
+In [3]:np.all(a) #  a的元素为1时返回True，为0时返回False
+
+In [4]:b = np.ones((3, 3))
+
+In [5]:np.all(b)
+
+In [6]:np.all(a<2) #  a的元素全部都小于2时返回True
+
+In [7]:np.all(b%3<2) # 除以3之后的余数小于2
+
+In [8]:np.all(a, axis=0) # 从行的方向上遍历元素
+
+In [9]:np.all(a, axis=1) #  从列的方向上遍历元素
+
+In [10]:a[2,0] = 0
+
+In [11]:a
+
+In [12]:np.all(a, axis=0)
+
+In [13]:np.all(a, axis=0, keepdims=True) #  指定keepdims=True
+
+In [14]:a.all()
+
+In [15]:b.all()
+
+In [16]:a.all(axis=1) # 列方向
+
+In [17]:(a<2).all()
+
+In [18]:a.all(keepdims=True)
+
+2.3.2 np.any
+----------------------------------------
+In [19]:a = np.random.randint(10, size=(2, 3))
+
+In [20]:a
+
+In [21]:np.any(a==9) # 查找a的元素中是否包含元素9。因为这里包含有元素9，所以返回True
+
+In [22]:np.any(a==5) # 这种情况下，数值为5的元素一个都没有，所以返回False
+
+In [23]:np.any(a%2==0, axis=0) # 从行的方向上遍历元素
+
+In [24]:np.any(a%2==1, axis=1) #  从列的方向上遍历元素
+
+In [25]:np.any(a%2==1, axis=1, keepdims=True) # 指定keepdims=True，对维度进行保留
+
+In [26]:np.any(a>2, keepdims=True)
+
+In [27]:(a%5==0).any()
+
+In [28]:(a>3).any()
+
+In [29]:b = np.random.randint(10, size=(2, 3))
+
+In [30]:b
+
+In [31]:(a==b).any(axis=1)
+
+In [32]:(a==b).any(axis=1, keepdims=True)
+
+2.4 指定条件获取元素索引的函数
+----------------------------------------
+2.4.1 np.where
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([10, 12, 9, 3, 19])
+
+In [3]:a[a<10]
+
+In [4]:a = np.arange(20, 0, -2) # 首先创建一维数组
+
+In [5]:a
+
+In [6]:np.where(a < 10) #  获取小于10的索引
+
+In [7]:a[np.where(a < 10)]
+
+In [8]:a = np.arange(12).reshape((3, 4))  # 指定为3×4的二维数组
+
+In [9]:a
+
+In [10]:np.where(a % 2 == 0) #  只取出偶数元素
+
+In [11]:np.where(a%2==0, 'even', 'odd') #  偶数返回even，奇数返回odd
+
+In [12]:np.where(a%2==0, 'even') # 如果只设置True，就会导致运行时产生错误
+In [13]:np.where(a%2==0, 'even', 'odd') # 偶数返回even，奇数返回odd
+
+In [14]:b = np.reshape(a, (3, 4))
+
+In [15]:c = b ** 2
+
+In [16]:c
+
+In [17]:np.where(b%2==0, b, c) # 只有奇数元素被转换成了c中的元素
+
+In [18]:np.where(b%2==0, b, (10, 8, 6, 4)) #  运用广播机制，使用(10, 8, 6, 4)重复的值
+
+2.5 最大值、最小值的筛选函数
+----------------------------------------
+2.5.1 np.amax
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.amax(np.array([1, 2, 3, 2, 1]))
+
+In [3]:arr = np.array([1, 2, 3, 4]).reshape((2, 2,))
+
+In [4]:np.amax(arr, axis=0)
+
+In [5]:np.amax(arr, axis=1)
+
+In [6]:np.amax(arr, keepdims=True)
+
+2.5.2 ndarray.max
+----------------------------------------
+In [7]:a = np.random.rand(20) # 使用rand创建20个随机数
+
+In [8]:a
+
+In [9]:a.max()
+
+In [10]:a = a.reshape((4, 5))
+
+In [11]:a
+
+In [12]:a.max()
+
+In [13]:a.max(axis=0) # 继续使用a求取最大值。首先求取每行的最大值
+
+In [14]:a.max(axis=1) #  接着求取每列的最大值
+
+In [15]:b = np.random.rand(30).reshape((2, 3, 5)) #  之后再使用三维数组进行尝试
+
+In [16]:b
+
+In [17]:b.max(axis=0) #  求取两个二维数组的元素中的最大值
+
+In [18]:b.max(axis=1) # 求取各个二维数组的行方向上的最大值
+
+In [19]:b.max(axis=2) #  求取各个二维数组的列方向上的最大值
+
+In [20]:b = np.arange(10, dtype=np.float)
+
+In [21]:b[3] = np.NaN # 将NaN代入
+
+In [22]:b.max()
+
+In [23]:np.nanmax(b) # 使用nanmax，就会返回除NaN之外的元素中的最大值
+2.5.3 np.amin
+----------------------------------------
+In [24]:a = np.array([
+...:[1.2, 1.3, 0.1, 1.5],
+...:[2.1, 0.2, 0.3, 2.0],
+...:[0.1, 0.5, 0.5, 2.3]])
+
+------------------
+In [24]:容易利用的文本
+------------------
+a = np.array([
+[1.2, 1.3, 0.1, 1.5],
+[2.1, 0.2, 0.3, 2.0],
+[0.1, 0.5, 0.5, 2.3]])
+------------------
+
+In [25]:np.amin(a) # 不对参数进行特别指定时
+
+In [26]:np.amin(a, axis=0) # 在行方向上逐个对最小值进行提取
+
+In [27]:np.amin(a, axis=1) #在列方向上逐个对最小值进行提取
+
+In [28]:np.amin(a, axis=0, keepdims=True) #  返回的不是一维数组，而是二维数组
+
+In [29]:np.amin(a, axis=1, keepdims=True)
+
+In [30]:a - np.amin(a, axis=1, keepdims=True) # 指定keepdims=True，就可以使用广播机制
+
+In [31]:a - np.amin(a, axis=1) # 如果不指定keepdims=True，就无法顺利地进行计算
+
+2.5.4 np.ndarray.min
+----------------------------------------
+In [32]:a = np.array([
+...:[1.2, 1.3, 0.1, 1.5],
+...:[2.1, 0.2, 0.3, 2.0],
+...:[0.1, 0.5, 0.5, 2.3]])
+
+------------------
+In [32]:可利用的文本
+------------------
+a = np.array([
+[1.2, 1.3, 0.1, 1.5],
+[2.1, 0.2, 0.3, 2.0],
+[0.1, 0.5, 0.5, 2.3]])
+------------------
+
+In [33]:a.min() #  首先在不对参数进行指定的情况下提取最小值
+
+In [34]:a.min(axis=0) #  指定坐标轴提取最小值
+
+In [35]:a.min(axis=1)
+
+In [36]:a.min(axis=0, keepdims=True)
+
+In [37]:a.min(axis=1, keepdims=True)
+
+2.6 返回数组中最大元素索引的函数
+----------------------------------------
+2.6.2 np.argmax
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.random.randint(10, size=10) #首先生成一个一维数组
+
+In [3]:a # 对a中的数值进行确认
+
+In [4]:np.argmax(a)
+
+In [5]:a.argmax()
+
+In [6]:b = np.random.randint(10, size=(3, 4)) # 接下来生成一个3×4的二维数组
+
+In [7]:b # 对b中的元素进行确认
+
+In [8]:np.argmax(b) #  虽然需要获取的是二维数组中最大值的索引，但是返回的是降维成一维数组后的索引。因此这里获取的是1
+
+In [9]:b.argmax() # np.ndarray.argmax的用法也是相同的
+
+In [10]:b
+
+In [11]:np.argmax(b, axis=0) # 指定axis=0(在这种情况下为行)方向上的最大值（因为是从纵向查找最大值的索引，所以元素数量为4个）
+
+In [12]:b.argmax(axis=0) #  np.ndarray.argmax的用法也是相同的
+
+In [13]:np.argmax(b, axis=1) # 尝试将axis指定为1。这时需要查找列方向上的最大值(横向上元素中的最大值)
+
+In [14]:b.argmax(axis=1)
+
+In [15]:c = np.random.randint(10, size=(2, 3, 4)) #生成一个2×3×4的三维数组
+
+In [16]:c #  对c中的数值进行确认
+
+In [17]:np.argmax(c, axis=0)
+
+In [18]:c.argmax(axis=0)
+
+In [19]:np.argmax(c, axis=1)
+
+In [20]:c.argmax(axis=1)
+
+In [21]:np.argmax(c, axis=2)
+
+In [22]:c.argmax(axis=2)
+
+2.6.4 np.argmin
+----------------------------------------
+In [23]:d = np.array([
+...:[1.2, 1.5, 2.3, 1.8],
+...:[0.2, 2.5, 2.1, 2.0],
+...:[3.1, 3.3, 1.5, 2.1]])
+
+------------------
+In [23]:可使用的文本
+------------------
+d = np.array([
+[1.2, 1.5, 2.3, 1.8],
+[0.2, 2.5, 2.1, 2.0],
+[3.1, 3.3, 1.5, 2.1]])
+------------------
+
+In [24]:d.argmin() # 首先在不指定参数的情况下执行代码
+
+In [25]:np.argmin(d) # 同样地执行代码
+
+In [26]:np.unravel_index(np.argmin(d), d.shape) # 这样调用，返回的就是没有被降为一维数组的索引
+
+In [27]:np.argmin(d, axis=0) # 接着对坐标轴进行指定
+
+In [28]:np.argmin(d, axis=1)
+
+In [29]:d.argmin(axis=1) # ndarray.argmin也可以完成同样的处理
+
+2.7 切换数组坐标轴顺序的函数
+----------------------------------------
+2.7.2 numpy.ndarray.transpose
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.arange(12).reshape(3, 4)
+
+In [3]:a
+
+In [4]:a.transpose() # 首先在不指定任何参数的情况下对数组进行转置
+
+In [5]:a.transpose(1, 0) # 对坐标轴的顺序进行指定。因为这里只是将坐标轴的顺序进行了颠倒，所以返回的是和上一步骤的执行结果相同的数组
+
+In [6]:a.transpose((1, 0)) #  可以对元组进行指定
+
+In [7]:a.transpose(0, 1) # 指定按原有顺序排列的坐标轴，数组不会产生变化
+
+In [8]:b = np.arange(6) # 尝试对一维数组进行转置
+
+In [9]:b
+
+In [10]:b.transpose() # 没有产生什么变化
+
+In [11]:b.shape #在这里对b的shape进行确认，可以看到坐标轴只有一个
+
+In [12]:b = b.reshape((1, 6)) #  如果像这样对两个坐标轴进行指定，就可以实现转置
+In [13]:b
+
+In [14]:b.transpose()
+
+In [15]:c = np.arange(24).reshape(4, 3, 2) #  4×3×2的三维数组。此外，axis=0的元素数量为4，axis=1的元素数量为3，axis=2的元素数量为2
+
+In [16]:c
+
+In [17]:c.transpose() #  如果不对参数进行任何指定，就会返回坐标轴的顺序经过转置后的(2,1,0)数组
+
+In [18]:c.transpose(1, 0, 2) # 尝试对坐标轴的顺序进行指定
+
+2.7.3 numpy.transpose
+----------------------------------------
+In [19]:np.transpose(c) # 再次对三维数组c进行转置
+
+In [20]:c.shape
+
+In [21]:np.transpose(c).shape
+
+In [22]:np.transpose(c, (1, 0, 2)) # 对坐标轴的顺序进行指定
+
+In [23]:np.transpose(c, (1, 0, 2)).shape #  对shape进行确认
+
+In [24]:b
+
+In [25]:np.transpose(b) # 在这里即使是使用与np.ndarray.transpose同样的方法进行转置，数组也不会产生变化
+
+In [26]:b = b.reshape((1, 6))
+
+In [27]:b
+
+In [28]:np.transpose(b) #  对shape进行变换即可实现转置，和np.ndarray.transpose相同
+
+2.7.4 numpy.ndarray.T
+----------------------------------------
+In [29]:a # 使用T再次分别对a、b、c进行转置
+
+In [30]:a.T
+
+In [31]:b
+
+In [32]:b.T
+
+In [33]:c
+
+In [34]:c.T
+
+In [35]:a.transpose().shape == a.T.shape # 对经过转置后的shape分别进行比较
+
+In [36]:b.transpose().shape == b.T.shape
+
+In [37]:c.transpose().shape == c.T.shape
+
+2.8 排序函数
+----------------------------------------
+2.8.1　np.sort
+----------------------------------------
+
+In [1]:import numpy as np
+
+In [2]:a = np.random.randint(0, 100, size=20)
+
+In [3]:a
+
+In [4]:np.sort(a)
+
+2.8.2 np.argsort
+----------------------------------------
+In [5]:a = np.array([1, 3, 2])
+
+In [6]:np.argsort(a)
+
+2.8.3  用kind参数指定quicksort、 mergesort、 heapsort
+----------------------------------------
+［终端窗口］
+$ python test.py
+
+In [1]:from test import *
+
+In [2]:sort_comparison(100)
+
+In [3]:sort_comparison(1000)
+
+In [4]:sort_comparison(10000)
+
+In [5]:sort_comparison(100000)
+
+2.8.4 　关于order参数
+----------------------------------------
+In [6]:values = [('Alice', 25, 9.7), ('Bob', 12, 7.6), ('Catherine', 1, 8.6), ('David', 10, 7.6)]
+
+In [7]:dtype = [('name', 'S10'),('ID', int), ('score', float)]
+
+In [8]:a = np.array(values, dtype=dtype)
+
+In [9]:np.sort(a, order='score')
+
+In [10]:np.argsort(a, order='score') # もちろん、argsortでもできる
+
+In [11]:np.sort(a, order=['score', 'ID'])
+
+In [12]:np.argsort(a, order=['score', 'ID'])
+
+In [13]:b = np.random.randint(0, 100, size=20).reshape(4,5)
+
+In [14]:b # 将b变成二维数组
+
+In [15]:np.sort(b) # 如果不指定axis，就会在列方向上进行排序
+
+In [16]:np.argsort(b) #  argsort也是同样的。显示的索引只是列的编号
+
+In [17]:np.sort(b, axis=0) # 然后对axis进行指定
+
+In [18]:np.argsort(b, axis=0)
+
+In [19]:c = np.random.randint(0, 100, size=(2, 4, 5))
+
+In [20]:c
+
+In [21]:np.sort(c, axis=0) # 三维数组在axis=0的方向上排序
+
+In [22]:np.argsort(c, axis=0) # 因为是对元素两两进行排序，因此索引值不是0就是1
+
+2.8.5 np.sort与np.ndarray.sort
+----------------------------------------
+In [23]:a = np.random.randint(0, 100, 20) #  生成20个随机数
+
+In [24]:a
+
+In [25]:np.sort(a) # 返回经过排序后的数组
+
+In [26]:a #  a中的内容没有变化
+
+In [27]:a.sort() #  使用ndarray.sort函数对a的元素进行排序
+
+In [28]:a
+
+2.9 数组拼接函数
+----------------------------------------
+2.9.1 np.hstack
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.arange(12)
+
+In [3]:b = np.arange(2)
+
+In [4]:a
+
+In [5]:b
+
+In [6]:np.hstack((a, b)) #  进行拼接
+
+In [7]:c = np.arange(2).reshape(1, 2) #  创建二维数组
+
+In [8]:c
+
+In [9]:np.hstack((a, c)) #如果和a进行拼接就会发生运行时错误
+
+In [10]:d = np.arange(5).reshape(1, 5) # 将shape指定为(1, 5)
+
+In [11]:d
+
+In [12]:np.hstack((c, d)) # 这样设置，就可以进行拼接
+
+In [13]:e = np.arange(12).reshape(2, 2, 3)
+
+In [14]:f = np.arange(6).reshape(2, 1, 3) # 接下来对三维数组进行拼接
+
+In [15]:e
+
+In [16]:f
+
+In [17]:np.hstack((e, f))
+
+2.9.2 np.vstack
+----------------------------------------
+In [18]:a = np.arange(12).reshape(-1, 1) # 包含12个元素的列向量
+
+In [19]:b = np.arange(2).reshape(-1, 1) #  包含两个元素的列向量
+
+In [20]:a
+
+In [21]:b
+
+In [22]:np.vstack((a, b)) # 尝试进行拼接
+
+In [23]:c = np.arange(2).reshape(1, 2)
+
+In [24]:c
+
+In [25]:np.vstack((a, c)) #  如果和a进行拼接，就会发生运行时错误
+
+In [26]:d = np.arange(4).reshape(2, 2) # 这样设置，就能创建二维数组
+
+In [27]:c
+
+In [28]:d
+
+In [29]:np.vstack((c, d))
+
+In [30]:e = np.arange(24).reshape(4, 3, 2)
+
+In [31]:f = np.arange(6).reshape(1, 3, 2)
+
+In [32]:e
+
+In [33]:f
+
+In [34]:g = np.vstack((e, f))
+
+In [35]:g #  进行拼接
+
+In [36]:g.shape # 对shape进行确认
+
+2.10 数据可视化函数库
+----------------------------------------
+2.10.1 matplotlib的安装方法
+----------------------------------------
+［终端窗口］
+$ pip install matplotlib
+
+［终端窗口］
+$ pip install PySide
+$ pip install PySide2
+
+［Jupyter Notebook］
+%matplotlib inline
+
+［IPython］
+In [1]:import numpy as np
+
+In [2]:import matplotlib.pyplot as plt # 以plt的形式导入是惯例
+
+
+2.10.3 正弦曲线的绘制
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:import matplotlib.pyplot as plt # 以plt的形式导入是惯例
+
+In [3]:X = np.linspace(-10, 10, 1000)
+
+In [4]:y = np.sin(X) # 计算正弦值
+
+In [5]:plt.plot(X, y) # 绘制图表，使用plot实现点与点之间的平滑连接
+
+In [6]:plt.show() #  显示图表
+
+In [7]:plt.grid(True)
+
+In [8]:plt.plot(X, y)
+
+In [9]:plt.show()
+
+In [10]:plt.title('sine wave')
+
+In [11]:plt.xlabel('X') #x轴的标签
+
+In [12]:plt.ylabel('y') # y轴的标签
+
+In [13]:plt.plot(X, y)
+
+In [14]:plt.show()
+
+In [15]:plt.xlim(-5,5) #  -5~5的范围
+
+In [16]:plt.ylim(-0.5, 1.0) # -0.5~1的范围
+
+In [17]:plt.plot(X, y)
+
+In [18]:plt.xlabel('X')
+
+In [19]:plt.ylabel('y')
+
+In [20]:plt.title('limited scale')
+
+In [21]:plt.show()
+
+In [22]:x = np.random.randn(1000) # 生成1000个服从标准正态分布的随机数
+
+In [23]:y = np.random.randn(1000)
+
+In [24]:plt.scatter(x, y)
+
+In [25]:plt.title('scatter')
+
+In [26]:plt.xlabel('x')
+
+In [27]:plt.ylabel('y')
+
+In [28]:plt.grid() #  即使不指定True，也会添加网格
+
+In [29]:plt.show()
+
+In [30]:plt.hist(x) #  创建直方图
+
+In [31]:plt.xlabel('x')
+
+In [32]:plt.ylabel('frequency')
+
+In [33]:plt.show()
+
+In [34]:x = np.linspace(-10, 10, 1000)
+
+In [35]:y_1 = np.sin(x)
+
+In [36]:y_2 = np.cos(x)
+
+In [37]:plt.plot(x, y_1)
+
+In [38]:plt.plot(x, y_2)
+
+In [39]:plt.grid()
+
+In [40]:plt.xlabel('x')
+
+In [41]:plt.ylabel('y')
+
+In [42]:plt.show()
+
+2.11 生成全零数组的函数
+----------------------------------------
+2.11.1 np.zeros
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.zeros(10) #  创建一维数组
+
+In [3]:np.zeros(10, dtype=int) # 将数据类型指定为int
+
+In [4]:np.zeros((3, 4)) # 创建3×4的二维数组
+
+2.11.2 np.empty与np.zeros的区别
+----------------------------------------
+
+In [5]:def zeros():
+...:    for i in range(10000):
+...:        _ = np.zeros((1, i))
+
+------------------
+In [5]:利用しやすいテキスト
+------------------
+def zeros():
+    for i in range(10000):
+        _ = np.zeros((1, i))
+------------------
+
+In [6]:def empty():
+...:     for i in range(10000):
+...:         _ = np.empty((1, i))
+
+------------------
+In [6]:可利用的文本
+------------------
+def empty():
+    for i in range(10000):
+        _ = np.empty((1, i))
+------------------
+
+In [7]:%timeit zeros()
+
+In [8]:%timeit empty()
+
+2.12 生成全1数组的函数
+----------------------------------------
+2.12.1 np.ones
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.ones(3) #  包含3个元素的一维数组
+
+In [3]:np.ones((2, 3)) #  2×3的二维数组
+
+In [4]:np.ones(4, dtype="float32") # 数据类型指定为float32
+
+In [5]:np.ones(4, dtype=np.int8) #  数据类型指定为int8。还可以使用在NumPy中预先定义好的对象进行指定
+
+In [6]:np.ones((2,3), dtype="complex") # 还可以指定为复数形式
+
+2.12.2 np.ones_like
+----------------------------------------
+In [7]:a = np.array([[1, 2, 3],[2, 3, 4]])
+
+In [8]:np.ones_like(a)
+
+In [9]:b = np.array([2, 3, 4], dtype="int8" )
+
+In [10]:np.ones_like(b)
+
+2.13 生成连续数列或等差数列的函数
+----------------------------------------
+2.13.1　Python的range函数
+----------------------------------------
+［终端窗口］
+$ python
+>>>[x for x in range(10)]
+
+>>>import numpy as np
+>>>np.array(range(10))
+
+2.13.3 np.arange
+----------------------------------------
+
+In [1]:import numpy as np
+
+In [2]:np.arange(5) # 0～5的等差数列（但是作为参数，指定的5是不包含在数列中的）
+
+In [3]:np.arange(-10) # 指定负数，就会返回没有元素的数组
+
+In [4]:np.arange(4.5) #  即使指定的是float型，也会生成数组
+
+In [5]:np.arange(1, 8)
+
+In [6]:np.arange(2, 10)
+
+In [7]:np.arange(0.5, 5.5) # 使用带小数点的值进行设置也可以生成数组
+
+In [8]:np.arange(0.55, 5.55)
+
+In [9]:np.arange(2, 12, 2) # 首项为2、公差为2、终点为12的等差数列
+
+In [10]:np.arange(2, 5, 0.2) #  公差可以不是整数
+
+In [11]:np.arange(5, 2, -1) # 公差可以指定为负数
+
+In [12]:np.arange(stop=3, step=1) # 如果不指定start，就会发生运行时错误
+
+In [13]:np.arange(5, dtype='float64') # 变换成浮点型
+
+In [14]:np.arange(5.0, dtype='int') # 变换成整数型
+
+In [15]:np.arange(0, 5, 0.5, dtype='int') #  公差中如果出现了小数，小数点后面的部分会被忽略
+
+In [16]:np.arange(0, 5, 1.5, dtype='int') # 与上面一样，出现了小数，小数点后面的部分会被忽略
+
+2.14 生成线性等距数列的函数
+----------------------------------------
+2.14.1 np.linspace
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.linspace(0, 1) # 首先指定起点为0，终点为1
+
+In [3]:np.linspace(0, 49) #  注意是生成50个元素，宽度需要调整为1
+
+In [4]:np.linspace(0, 2, 3) # 将0~2的区间分为3等分
+
+In [5]:np.linspace(0, -2, 3) # 使用负数也可以生成数组
+
+In [6]:np.linspace(0, 2, num=3) #  还可以指定num = 3
+
+In [7]:np.linspace(0, 2, num=3, endpoint=False) 
+
+In [8]:np.linspace(0, 2, num=3, endpoint=True) # 返回元素中包含2的ndarray，这是默认设置
+
+In [9]:np.linspace(0, 1, retstep=True) # 显示公差
+
+In [10]:np.linspace(0, 2, num=3, retstep=True)
+
+In [11]:np.linspace(0, 2, num=3, retstep=False) # 不显示公差（默认设置）
+
+In [12]:np.linspace(0, 2, num=3) # 不指定任何数据类型，就是float型
+
+In [13]:a = np.linspace(0, 1, 3)
+
+In [14]:a.dtype #  确认数据类型
+
+In [15]:np.linspace(0, 2, num=3, dtype='int') #  将数据类型指定为int型
+
+In [16]:np.linspace(0, 1, num=4, dtype='float32') #  将数据类型指定为float32，就是32位浮点型
+
+In [17]:np.linspace(0, 1, num=4, dtype='float64') #  将数据类型指定为float64，就是64位浮点型
+
+2.15 生成单位矩阵的函数
+----------------------------------------
+2.15.3 np.eye
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.eye(3) #  3×3的单位矩阵
+
+In [3]:np.eye(10)
+
+In [4]:np.eye(2, 3) # 2×3
+
+In [5]:np.eye(5, 4) # 5×4
+
+In [6]:np.eye(5, k=0) # 若指定k=0，对角线上的元素不会移动
+
+In [7]:np.eye(5, k=1) #  向上方移动一个位置
+
+In [8]:np.eye(5, k=-1) # 向下方移动一个位置
+
+In [9]:np.eye(5, k=3) # 向上方移动3个位置
+
+In [10]:np.eye(5, dtype=int)
+
+In [11]:np.eye(5, dtype=complex) # 指定为复数类型
+
+2.15.4 np.identity
+----------------------------------------
+In [12]:np.identity(5) # 首先创建简单的矩阵
+
+In [13]:np.identity(2)
+
+In [14]:np.identity(3, dtype=int)
+
+In [15]:np.identity(4, dtype="float32")
+
+In [16]:%timeit np.eye(10000)
+
+In [17]:%timeit np.identity(10000)
+
+2.16 未初期化の配列を生成するempty
+----------------------------------------
+2.16.1 np.empty
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.empty(10) # 未经初始化处理的一维数组
+
+In [3]:np.empty((2, 3)) #  2×3的二维数组
+
+In [4]:np.empty(5, dtype=np.int8) #将dtype指定为int8
+
+In [5]:np.empty(10, dtype=np.bool) #  也可以指定为bool值
+
+In [6]:np.empty(10, dtype=complex) # 还可以生成复数
+
+2.16.2 与其他生成数组函数的对比
+----------------------------------------
+In [7]:%timeit np.zeros(10000)
+
+In [8]:%timeit np.empty(10000)
+
+In [9]:%timeit np.ones(10000)
+
+2.17 随机数生成函数
+----------------------------------------
+2.17.1 　均匀随机数的生成
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.random.rand() # 不设置任何数值，返回的就是一个数值
+
+In [3]:np.random.randint(10) #返回0～9内的随机整数
+
+In [4]:np.random.rand(2,3) #  2×3的随机数数组
+
+In [5]:np.random.randint(10, size=(2,3)) # 将数组的大小代入size中(默认设置为None)
+
+In [6]:np.random.randint(5,10, size=10) # 返回(5,10)内的随机整数
+
+In [7]:(10-5)*np.random.rand(10) + 5 # 返回(5,10)内的随机实数
+
+2.17.2 随机数生成的固化
+----------------------------------------
+In [8]:np.random.seed(seed=21) #  将seed设置为21
+
+In [9]:np.random.rand() # 生成一个随机数
+
+In [10]:np.random.seed(21) # 再次将seed设置为21（即使不用参数指定seed，也可对seed进行设置）
+
+In [11]:np.random.rand() #返回同样的值
+
+In [12]:np.random.seed(10) # 对于数组也可以进行同样的设置，将seed设置为10
+
+In [13]:np.random.rand(20) #生成20个随机数
+
+In [14]:np.random.seed(23) # 将seed设置为23
+
+In [15]:np.random.rand(20) # 生成20个随机数
+
+In [16]:np.random.seed(10) # 再将seed设置为10进行确认
+
+In [17]:np.random.rand(20) #  返回同样的值
+
+In [18]:np.random.seed(23) #  同样地，再将seed设置为23进行确认
+
+In [19]:np.random.rand(20) # 返回同样的值
+
+2.17.3 列表的随机提取
+----------------------------------------
+In [20]:a = ['Python', 'Ruby', 'Java', 'JavaScript', 'PHP'] #  创建一个列表
+
+In [21]: np.random.choice(a, 3) # 从列表a中随机提取3个元素
+
+In [22]:np.random.choice(a, 5, replace=False) # 不重复提取
+
+In [23]:np.random.choice(a, 20, p = [0.8, 0.05, 0.05, 0.05, 0.05]) #通过将列表传递给p改变提取数值的频率。需要注意p中数值合计为1
+
+In [24]:np.random.choice(5, 10) #  将整数传递给最初的元素，就等同于返回的是使用np.arange(5)生成的列表。这种情况下，会生成(0～5)内的10个随机整数
+
+2.17.4 列表的随机排序
+----------------------------------------
+In [25]:a = np.arange(10)
+
+In [26]:a
+
+In [27]:np.random.shuffle(a) # 对列表a中元素的顺序进行调换
+
+In [28]:a # 确认列表a中的元素
+
+2.17.5 生成服从特定概率分布的随机数
+----------------------------------------
+In [29]:np.random.randn() # 不指定任何参数，返回的就是单独的数值
+
+In [30]:np.random.normal() # 这里也是同样返回单独的数值
+
+In [31]:np.random.randn(10) # 返回一维数组
+
+In [32]:np.random.normal(loc=1,scale=2.0, size=10) # loc为平均值，scale为标准差，size为所返回数组的大小
+
+In [33]:np.random.normal(size=10) # 返回的是与randn(10)相同的执行结果
+
+In [34]:np.random.binomial(100, 0.5, 30) # 在(n, p) = (100, 0.5)中事件发生的次数。将此操作执行30次
+
+In [35]:np.random.beta(1, 2, size=10) #  生成服从(α, β) = (1,2)的贝塔分布的10个随机数
+
+In [36]:np.random.gamma(2, 2, size=10) # 生成服从(shape, scale) = (α, β) = (2,2)分布的随机数
+
+In [37]:np.random.poisson(2, 10) #  生成服从λ =2.0，size = 10 分布的随机数数组
+
+In [38]:np.random.poisson(2, (2,2)) # 还可以生成二维数组
+
+In [39]:np.random.chisquare(2, 10) # 生成自由度为2的10个值
+
+In [40]:from matplotlib import pyplot as plt
+
+In [41]:def standard_normal_distribution(x):
+...    return (1/np.sqrt(2*np.pi))*np.exp(-x**2/2)*1000 #  将服从标准正态分布的概率密度函数放大1000倍。
+# (由于直方图度数的宽度为0.01，所以只放大数据数量的1/100倍)
+
+------------------
+In [41]:可使用的文本
+------------------
+def standard_normal_distribution(x):
+    return (1/np.sqrt(2*np.pi))*np.exp(-x**2/2)*1000 # 将服从标准正态分布的概率密度函数放大1000倍。
+# (由于直方图度数的宽度为0.01，所以只放大数据数量的1/100倍)
+------------------
+
+In [42]:a = np.random.randn(100000) # 生成10万个服从标准正态分布的随机数
+
+In [43]:x = np.linspace(-5, 5, 1000)
+
+In [44]:plt.hist(a, bins=1000)
+
+In [45]:plt.plot(x, standard_normal_distribution(x))
+
+In [46]:plt.show()
+
+2.18 数组的扁平化函数
+----------------------------------------
+2.18.1 numpy.ndarray.flatten
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.arange(10).reshape(2, 5) # 生成2×5的二维数组
+
+In [3]:a
+
+In [4]:b = a.flatten() # 将转换后的一维数组代入b中
+
+In [5]:a # a本身并不会产生变化
+
+In [6]:b # b中代入的是转换后的数组
+
+In [7]:a.shape # 对shape进行确认
+
+In [8]:b.shape # 由于b的shape是一维数组，所以只会显示一个数值
+
+In [9]:c = np.arange(12).reshape(2, 2, 3) #  对三维数组进行确认
+
+In [10]:c
+
+In [11]:d = c.flatten() # 将转换后的一维数组代入d中
+
+In [12]:c
+
+In [13]:d
+
+In [14]:c.shape # 在这里也对c和d的shape进行确认
+
+In [15]:d.shape
+
+2.18.2 性能评估
+----------------------------------------
+In [16]:arr = np.repeat(5, 10000).reshape(250, 40)
+
+In [17]:%timeit arr.flatten()
+
+In [18]:%timeit np.ravel(arr)
+
+2.19 文本文件的读写函数
+----------------------------------------
+2.19.5 np.savetxt
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.random.randn(3, 4) #  生成由服从标准正态分布的随机数所组成的二维数组
+
+In [3]:np.savetxt('sample1.txt', a) # 在不做任何指定的情况下对其进行保存
+
+In [4]:b = np.loadtxt('sample1.txt') #  载入保存后的数据
+
+In [5]:a
+
+In [6]:b
+
+In [7]:np.savetxt('sample1.csv', a) # 也可以保存为csv格式
+
+In [8]:c = np.loadtxt('sample1.csv')
+
+In [9]:c
+
+In [10]:np.savetxt('sample1.dat', a) #还可以保存为dat格式
+
+In [11]:d = np.loadtxt('sample1.dat')
+
+In [12]:d
+
+In [13]:np.savetxt('sample2.txt', a, delimiter=',')
+
+In [14]:e = np.loadtxt('sample2.txt') # delimiter中如果不做任何指定，会发生运行时错误
+
+In [15]:e = np.loadtxt('sample2.txt', delimiter=',')
+
+In [16]:e
+
+In [17]:np.savetxt('sample3.txt', a, fmt ='%.2e')
+
+In [18]:np.savetxt('sample4.txt', a, fmt ='%.2f')
+
+In [19]:f = np.array([[10.1+3.21j,100.0+32.1j],[20.0+0.2j,22.1-1j]]) # 生成将复数作为元素的数组
+
+In [20]:np.savetxt('sample5.txt', f, fmt=['%.3e+%.3ej', '%.1e+%.1ej'])
+
+In [21]:np.loadtxt('sample4.txt', usecols=(0,2)) #  只使用第0列和第2列
+
+In [22]:np.loadtxt('sample4.txt', skiprows=1) #  跳过第0行
+
+In [23]:np.savetxt('sample6.txt', a, fmt='%.3e', header='this is a header',footer='this is a footer')
+
+In [24]:np.savetxt('sample7.txt', a, fmt='%.3e', header='this is a header',footer='this is a footer', comments='>>>')
+
+In [25]:np.loadtxt('sample7.txt', comments='>>>') # 确认loadtxt是否准确读取文件
+
+In [26]:np.loadtxt('foo.csv', dtype=[('col1', 'i8'), ('col2', 'S10'), ('col3', 'f8'), ('col4', 'S10')]) # 按照8字节的int型、10字节的string型, 8字节的float型,10
+# 字节的string型的顺序进行指定
+
+In [27]:np.loadtxt('foo.csv', dtype=[('col1', 'i8'), ('col2', 'S10'), ('col3','f8'), ('col4', 'S10')], unpack=True) #  指定unpack=True可以进行转置
+
+In [28]:age, gender, tall, driver_lisense=np.loadtxt('foo.csv', dtype=[('col1', 'i8'), ('col2', 'S10'), ('col3', 'f8'), ('col4', 'S10')], unpack=True)
+age
+In [29]:age
+
+In [30]:gender
+
+In [31]:tall
+
+In [32]:driver_lisense
+
+In [33]:def driver_lisense(str): #  对两个函数进行定义
+...:    if str == b'Yes' : return 1
+...:    else: return -1
+
+------------------
+In [33]:可使用的文本
+------------------
+def driver_lisense(str): # 对两个函数进行定义
+    if str == b'Yes' : return 1
+    else: return -1
+------------------
+
+In [34]:def gender(str):
+...:    if str == b'male': return 1
+...:    else: return -1
+
+------------------
+In [34]:可使用的文本
+------------------
+def gender(str):
+    if str == b'male': return 1
+    else: return -1
+------------------
+
+In [35]:np.loadtxt('foo.csv', converters={1: lambda s: gender(s), 3: lambda s: driver_lisense(s)}) # 使用函数将字符串中的数据转换成数值
+
+In [36]:def gender2(str): #重新对函数进行设置
+...:    if not str: return 0 # 没有输入任何数值时，就会返回0
+...:
+...:    elif str == b'male': return 1
+...:    else: return -1
+
+------------------
+In [36]:可利用的文本
+------------------
+def gender2(str): #  重新对函数进行设置
+    if not str: return 0 #没有输入任何数值时，就会返回0
+
+    elif str == b'male': return 1
+    else: return -1
+------------------
+
+
+In [37]:np.loadtxt('foo.csv', converters={1: lambda s: gender2(s), 3: lambda s:
+...:driver_lisense(s)}, delimiter=',')
+
+------------------
+In [37]:可利用的文本
+------------------
+np.loadtxt('foo.csv', converters={1: lambda s: gender2(s), 3: lambda s: driver_lisense(s)}, delimiter=',')
+------------------
+
+In [38]:np.genfromtxt('bar.txt', delimiter=',')
+
+In [39]:np.genfromtxt('bar.txt', delimiter=',', dtype=('int', 'float', 'int')) #  指定int、 float、 int等格式
+
+In [38]:np.genfromtxt('bar.txt', delimiter=',')
+
+In [39]:np.genfromtxt('bar.txt', delimiter=',', dtype=('int', 'float', 'int')) #  指定int、 float、 int等格式
+
+2.20 直接存取数组数据的函数
+----------------------------------------
+2.20.2 np.load
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.random.randn(1200*1000).reshape(1200, -1)# 生成稍微大一些的数组
+
+In [3]:np.save('a', a)
+
+In [4]:np.load('a.npy') # 对保存后的文件进行载入
+
+In [5]:a.shape
+
+In [6]:b = np.load('a.npy') #  将保存后的文件保存到其他的变量中
+
+In [7]:b.shape # 由于shape和a的是一样的，可以看到文件被成功读取
+
+In [8]:c = np.random.randn(12*20*40).reshape(12, 20, 40) #  这里生成三维数组
+
+In [9]:np.save('c', c)
+
+In [10]:d = np.load('c.npy')
+
+In [11]:d.shape
+
+In [12]:e = np.loadtxt('c.npy') # 使用loadtxt不能读取文件
+
+In [13]:np.savetxt('c.npy', c) # 如果使用savetxt，三维数组c将无法被保存
+
+2.21 将buffer快速转换为ndarray的函数
+----------------------------------------
+2.21.2比较将音频文件保存为数组的时间
+
+In [1]:import numpy as np
+
+In [2]:import wave
+
+In [3]:wf = wave.open('sample_sound.wav')
+
+In [4]:channels = wf.getnchannels()
+
+In [5]:wf.getparams()
+
+In [6]:chunk_size = wf.getnframes()
+
+In [7]:chunk_size # #利用着与书籍杂志面不同的声音文件(声音文件从free Wave,MP3使用。
+http://www.ne.jp/asahi/music/myuu/wave/wave.htm）
+
+In [8]:data = wf.readframes(chunk_size) # 首先将读取的文件的全部内容保存到变量中
+
+In [9]:%timeit data2 = np.frombuffer(data, dtype='int16')
+
+In [10]:%timeit data3 = np.fromiter(data, dtype='int16')
+
+2.22 筛选非零元素的函数
+----------------------------------------
+2.22.2 np.ndarray.nonzero
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.random.randint(0, 10, size=20)
+
+In [3]:a #  一维的随机数数组
+
+In [4]:np.nonzero(a) # 提取非零元素的索引值
+
+In [5]:a.nonzero() # 这种格式也是可以的
+
+In [6]:a[np.nonzero(a)] # 这样设置就可以生成筛选出非零元素后的数组
+
+In [7]:b = np.random.randint(0, 10, size=(4,5)) #  4×5的二维随机数数组
+
+In [8]:b
+
+In [9]:np.nonzero(b) #第一个数组是在行方向上的索引，第二个数组是在列方向上的索引
+
+In [10]:b.nonzero()
+
+In [11]:b[b.nonzero()] #  提取非零元素
+
+2.22.3 np.where与np.argwhere的比较
+----------------------------------------
+In [12]:a = np.random.randint(0, 10, size=(100, 100))
+
+In [13]:b = np.ones(shape=(100, 100))
+
+In [14]:np.where(a != 0, a, b)
+
+In [15]:import numpy as np
+
+In [16]:a = np.random.randint(0, 10, size=(100, 100))
+
+In [17]:np.nonzero(a)
+
+In [18]:np.where(a != 0)
+
+In [19]:np.argwhere(a != 0)
+
+In [20]:np.transpose(np.nonzero(a))
+
+2.23 比flatten更高速的数组扁平化函数
+----------------------------------------
+2.23.3 关于order参数
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.arange(10).reshape(2, 5) # 生成2×5的二维数组
+
+In [3]:a
+
+In [4]:a.ravel() # 转换成一维数组
+
+In [5]:np.ravel(a) # 同样的代码也可以写成这一形式
+
+In [6]:a.ravel(order='C') # 将order指定为'C'（初始值），会得到相同的数组
+
+In [7]:a.ravel(order='F') #  将order指定为'F'，会在行方向上对值进行读取
+
+In [8]:a.ravel(order='A') #  因为没有以FORTRAN的风格保存元素，所以输出的是与order='C'一样的结果
+
+Out[8]: array([0, 1, 2, 3, 4, 5, 6, 7, 8, 9])
+
+In [9]:a.ravel(order='K') # 这里也没有对数组的shape进行修改，所以不会发生变化
+
+In [10]:b = np.arange(10).reshape(2,5, order='F')
+
+In [11]:b
+
+In [12]:b.ravel(order='F') # 变成连号
+
+
+In [13]:b.ravel(order='A')
+
+In [14]:b.ravel() #指定order='C'，在列方向上读取
+
+In [15]:c = b.T
+
+In [16]:c.ravel() #变成连号
+
+In [17]:c.ravel(order='K') # 按照内存的顺序读取
+
+In [18]:c.T.ravel(order='K')
+
+
+2.24 像铺瓷砖一样铺数组的函数
+----------------------------------------
+2.24.1 np.tile
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([0, 1, 2])
+
+In [3]:np.tile(a, 2) # 将一维数组重复两次
+
+In [4]:np.tile(a, (3, 2)) # 3×2的二维数组的元素都是由数组a构成的
+
+In [5]:np.tile(a, (2, 3, 4)) # 还可以铺成三维数组
+
+In [6]:b = np.arange(6).reshape(2, 3) # 平铺二维矩阵
+
+In [7]:np.tile(b, 2)
+
+In [8]:np.tile(b, (2, 3))
+
+In [9]:np.tile(b, (2, 1, 1))
+
+2.24.2 np.tile与广播
+----------------------------------------
+In [10]:a = np.arange(10000).reshape(-1, 1)
+
+In [11]:b = np.arange(10000)
+
+In [12]:%timeit a*b
+
+In [13]:%timeit np.tile(a, (1, 10000))*np.tile(b, (10000, 1))
+
+In [14]:c = np.random.rand(10)
+
+In [15]:b = np.array([0, 1, 0, 2, 1])
+
+In [16]:b = np.tile(b, 2)
+
+In [17]:c * b
+
+In [18]:b = np.array([0, 1, 0, 2, 1])
+
+In [19]:c * b
+
+2.25 为数组增加维度的对象
+----------------------------------------
+2.25.1 使用np.newaxis对象增加维度
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:np.newaxis is None
+
+In [3]:x = np.arange(15).reshape(3, 5)
+
+In [4]:x
+
+In [5]:x[np.newaxis, :, :] # 增加一个维度并执行切片操作
+
+In [6]:x[:, np.newaxis, :] # 还可以在axis=1方向上增加
+
+In [7]:x[:, None, :] #还可以使用None替代
+
+In [8]:x = x.flatten()
+
+In [9]:x # 将x转换成一维数组
+
+In [10]:x[:, np.newaxis] #将x设置为列向量
+
+2.25.2 使用np.reshape替代np.newaxis对象
+----------------------------------------
+In [11]:x = np.arange(15).reshape(3, 5) #  再次生成x
+
+In [12]:np.reshape(x, (1, 3, 5)) # x[np.newaxis, :,:]
+
+In [13]:np.reshape(x, (3, 1, 5)) # x[:, np.newaxis, :]
+
+In [14]:x = x.flatten() # 转换成一维数组
+
+In [15]:np.reshape(x, (-1, 1)) # x[:, np.newaxis]
+
+2.26 数组元素的差分与求和函数
+----------------------------------------
+2.26.1 np.diff
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([1, 2, 4, 1, 6, 8, 3]) # 准备一个任意排列的数组
+
+In [3]:np.diff(a, n=1) # 首先指定n=1
+
+In [4]:np.diff(a, n=2) # 其次指定n=2
+
+In [5]:np.diff(a, n=3) # 之后指定n=3
+
+In [6]:np.diff(a, n=4) #  最后指定n=4
+
+In [7]:b = np.random.randint(10, size=(5, 5))
+
+In [8]:b
+
+In [9]:np.diff(b, axis=-1) # 和axis=1的意思一样
+
+In [10]:np.diff(b, axis=0) # 之后指定行方向
+
+In [11]:np.diff(b, axis=1, n=2) # 指定n=2
+
+2.26.3 np.ndarray.cumsum
+----------------------------------------
+In [12]:a = np.random.randint(10, size=20) # 生成20个0～9的随机数
+
+In [13]:a
+
+In [14]:np.cumsum(a) # 首先进行简单的求和计算
+
+In [15]:a.cumsum() #这样使用也是没有问题的
+
+In [16]:np.cumsum(a, dtype='float32') #将dtype指定为float32
+
+In [17]:a.cumsum(dtype='float32')
+
+In [18]:b = np.random.rand(3, 4)*10
+
+In [19]:c = np.random.randint(10, size=10, dtype='int8')
+
+In [20]:c
+
+In [21]:c.cumsum() #  如果不特别对dtype进行指定
+
+In [22]:c.cumsum().dtype #  会自动变成int64
+
+In [23]:d = c.cumsum(dtype='int8') # 如果对dtype进行了指定，就不会出现上面这种情况
+
+In [24]:d.dtype
+
+In [25]:b
+
+In [26]:np.cumsum(b) #不对axis进行指定，就会得到如下结果
+
+In [27]:np.cumsum(b, axis=1) #这样指定，就会在列方向上求和
+
+In [28]:b.cumsum(axis=1)
+
+In [29]:np.cumsum(b, axis=0) #  在行方向上求和
+
+In [30]:b.cumsum(axis=0)
+
+2.27 用于连接多维数组的对象
+----------------------------------------
+2.27.2 np.r_
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:a = np.array([1, 2, 3])
+
+In [3]:b = np.array([4, 5, 6]) #  首先对一维数组进行处理
+
+In [4]:np.r_[a, b]
+
+In [5]:np.r_[2, 5, 3, np.array([2, 3, ]), 4.2]
+
+In [6]:c = np.zeros((2, 3)) # # 对二维数组进行连接。需要注意，当axis=1方向上的元素的数量不一致时，是不能进行连接的
+
+In [7]:d = np.ones((3, 3)) # c中的axis=1方向上的元素数量是3个，与之对齐。axis=0方向上的元素数量可以与c中的2不一样
+
+In [8]:np.r_[c, d]
+
+In [9]:d = np.ones((3, 4))
+
+In [10]:np.r_[c, d] "# 由于axis=1的元素数量不一致，所以发生了运行时错误
+
+In [11]:np.r_[0:10]
+
+In [12]:np.r_[:10]
+
+In [13]:np.r_[-10:]
+
+In [14]:np.r_[0:10:2] # 在0～9内每隔两个间隔进行显示
+
+In [15]:np.r_[10:0:-1] # 颠倒顺序进行显示
+
+In [16]:np.r_[0:10:10j] # 分成10等份进行显示
+
+In [17]:np.r_[0:9:20j] # 分成20等份进行显示
+
+In [18]:np.r_[0:10, 0, 4, np.array([3, 3])] #最后还可以添加数字或一维数组
+
+In [19]:a = np.ones((2, 2))
+
+In [20]:b = np.zeros((2, 2))
+
+In [21]:np.r_['1', a, b] # 在axis=1（列）方向上进行连接
+
+In [22]:np.r_['1', a, b].shape #  若确认这个shape，就可以看到在axis=1的方向上元素的数量增加了
+
+In [23]:np.r_['0', a, b] # 接着在行方向上进行连接
+
+In [24]:np.r_['0', a, b].shape #确认shape
+
+In [25]:np.r_[a, b].shape # 如果不指定a，就是a=0
+
+In [26]:c = np.ones((2, 2, 2)) # 然后连接三维数组
+
+In [27]:d = np.zeros((2, 2, 2))
+
+In [28]:c
+
+In [29]:d
+
+In [30]:np.r_['0', c, d] # 首先在axis=0方向上进行连接
+
+In [31]:np.r_['1', c, d]
+
+In [32]:np.r_['2', c, d]
+
+In [33]:np.r_['0', c, d].shape #  将这些shape全部都确认一遍。可以看到所有的编号所对应的位置中的元素数量都增加了
+
+In [34]:np.r_['1', c, d].shape
+
+In [35]:np.r_['2', c, d].shape
+
+In [36]:np.r_['0,2', [0, 1, 2],[3, 3, 3]] # 在二维数组的axis=0方向上进行连接
+
+In [37]:np.r_['0, 2', [0, 1, 2], [3, 3, 3]].shape
+
+In [38]:np.r_['0, 3', [0, 1, 2], [3, 3, 3]] #  在三维数组的axis=0方向上进行连接
+In [39]:np.r_['0, 3', [0, 1, 2], [3, 3, 3]].shape
+
+In [40]:np.r_['-1, 4', [0, 1, 2], [3, 3, 3]] # 在四维数组中也可以进行同样的操作，这里是对最低维度进行连接
+
+In [41]:np.r_['-1, 4', [0, 1, 2], [3, 3, 3]].shape
+
+In [42]:np.r_['0, 2, -1', [0, 1, 2], [3, 3, 3]] # 将(3,)变成(1, 3)之后，再在axis=0方向上连接
+
+In [43]:np.r_['0, 2, -1', [0, 1, 2], [3, 3, 3]].shape
+
+In [44]:np.r_['0, 2, 0', [0, 1, 2], [3, 3, 3]] # 将(3,)变成(3, 1)之后，再在axis=0方向上连接
+
+In [45]:np.r_['0, 2, 0', [0, 1, 2], [3, 3, 3]].shape
+
+In [46]:np.r_['0, 3, 0', [0, 1, 2], [3, 3, 3]] #  三维数组也可以进行同样的操作。例如 ：(3,)→(3, 1, 1)
+
+In [47]:np.r_['0, 3, 0', [0, 1, 2], [3, 3, 3]].shape
+
+In [48]:a = np.array([1, 4, 6])
+
+In [49]:b = np.array([2, 2, 2])
+
+In [50]:np.r_['r', a, b]
+
+In [51]:np.r_['c', a, b] # 变成列向量
+
+In [52]:c = np.ones((4, 5))
+
+In [53]:d = np.zeros((2, 5))
+
+In [54]:np.r_['r', c, d] # 二维矩阵
+
+In [55]:np.r_['c', c, d] #指定'c'结果也是一样的
+
+2.27.3 np.c_
+----------------------------------------
+In [56]:a = np.ones((3, 2))
+
+In [57]:b = np.zeros((3, 3))
+
+In [58]:a
+
+In [59]:b
+
+In [60]:np.c_[a, b]
+
+In [61]:c = np.zeros(3)
+
+In [62]:c
+
+In [63]:np.c_[a, c]
+
+In [64]:np.c_[a, c].shape
+
+In [65]:np.c_[[[1, 2, 3]], [[4, 5, 6]], 2, 3] #  也可以只对数值进行连接。但是需要注意的是，前半部分的两个数组必须变成二维数组
+# 才能实现

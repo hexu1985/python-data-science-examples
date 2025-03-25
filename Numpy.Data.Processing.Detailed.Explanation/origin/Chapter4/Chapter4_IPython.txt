@@ -1,0 +1,685 @@
+Chapter 4 NumPy机器学习编程
+----------------------------------------
+4.1数组的归一化标准化算法
+----------------------------------------
+4.1.2 z-score normalization （标准化）
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:def zscore(x, axis = None):
+...:    xmean = x.mean(axis=axis, keepdims=True)
+...:    xstd = np.std(x, axis=axis, keepdims=True)
+...:    zscore = (x-xmean)/xstd
+...:    return zscore
+
+------------------
+In [2]:可使用的文本
+------------------
+def zscore(x, axis = None):
+    xmean = x.mean(axis=axis, keepdims=True)
+    xstd = np.std(x, axis=axis, keepdims=True)
+    zscore = (x-xmean)/xstd
+    return zscore
+------------------
+
+
+In [3]:a = np.random.randint(10, size=(2, 5))
+
+In [4]:a # 生成10个随机数 
+
+In [5]:zscore(a)
+
+In [6]:zscore(a, axis=1)
+
+In [7]:b = zscore(a, axis=1)
+
+In [8]:b.sum(axis=1)
+
+In [9]:b.std(axis=1)
+
+
+4.1.3 min-max normalization
+----------------------------------------
+In [10]:import numpy as np
+
+In [11]:def min_max(x, axis=None):
+...:    min = x.min(axis=axis, keepdims=True)
+...:    max = x.max(axis=axis, keepdims=True)
+...:    result = (x-min)/(max-min)
+...:    return result
+
+------------------
+In [11]:可使用的文本
+------------------
+def min_max(x, axis=None):
+    min = x.min(axis=axis, keepdims=True)
+    max = x.max(axis=axis, keepdims=True)
+    result = (x-min)/(max-min)
+    return result
+------------------
+
+In [12]:b = np.random.randint(10, size=(2, 5))
+
+In [13]:b
+
+In [14]:c = min_max(b)
+
+In [15]:c
+
+In [16]:d = min_max(b, axis=1)
+
+In [17]:d
+
+4.1.4 　向量的归一化
+----------------------------------------
+In [18]:import numpy as np
+
+In [19]:def normalize(v, axis=-1, order=2):
+...:    l2 = np.linalg.norm(v, ord=order, axis=axis, keepdims=True)
+...:    l2[l2==0] = 1
+...:    return v/l2
+
+------------------
+In [19]:可使用的文本
+------------------
+def normalize(v, axis=-1, order=2):
+    l2 = np.linalg.norm(v, ord=order, axis=axis, keepdims=True)
+    l2[l2==0] = 1
+    return v/l2
+------------------
+
+In [20]:a = np.array([1, 2, 3, 2, 1])
+
+In [21]:b = normalize(a)
+
+In [22]:b
+
+In [23]:(b*b).sum()
+
+In [24]:c = np.random.randint(10, size=(3,4))
+
+In [25]:c
+
+In [26]:d = normalize(c, axis=None) #对所有的元素进行归一化处理
+
+In [27]:d
+
+In [28]:(d*d).sum()
+
+In [29]:e = normalize(c, axis=1)
+
+In [30]:e
+
+In [31]:f = np.random.randint(10, size=(2, 3, 4))
+
+In [32]:normalize(f, axis=(1, 2))
+
+4.2 线性回归的NumPy编程
+----------------------------------------
+4.2.4 NumPy代码的编写
+----------------------------------------
+In [1]:import numpy as np
+
+In [2]:X = np.random.rand(20)*8-4 #  –4～4内均匀分布的随机数
+
+In [3]:X
+
+In [4]:y = np.sin(X) + np.random.randn(20)*0.2 # 在正弦曲线的值中加入噪声
+
+In [5]:y
+
+In [6]:import matplotlib.pyplot as plt
+
+In [7]:XX = np.linspace(-4, 4, 100) #生成将–4～4内的空间均分为100等分的数列
+
+In [8]:plt.xlabel('X')
+
+In [9]:plt.ylabel('y')
+
+In [10]:plt.title('training data')
+
+In [11]:plt.grid()
+
+In [12]:plt.scatter(X, y, marker='x', c='red') # 用marker设置点的形状，c设置颜色，并生成散点图
+
+In [13]:plt.plot(XX, np.sin(XX)) #  绘制正弦曲线
+
+In [14]:plt.show()
+
+In [15]:A = np.empty((6,6)) # 创建保存矩阵A的容器
+
+In [16]:for i in range(6):
+...:    for j in range(6):
+...:        A[i][j] = np.sum(X**(i+j))
+
+------------------
+In [16]:可使用的文本
+------------------
+for i in range(6):
+    for j in range(6):
+        A[i][j] = np.sum(X**(i+j))
+------------------
+
+In [17]:A
+
+In [18]:b = np.empty(6)
+
+In [19]:for i in range(6):
+...:    b[i] = np.sum(X**i*y)
+
+------------------
+In [19]:可使用的文本
+------------------
+for i in range(6):
+    b[i] = np.sum(X**i*y)
+------------------
+
+In [20]:b
+
+In [21]:omega = np.dot(np.linalg.inv(A), b.reshape(-1, 1)) # 使用np.linalg.inv()得到逆矩阵，使用np.dot计算内积
+
+In [22]:omega.shape
+
+In [23]:f = np.poly1d(omega.flatten()[::-1]) # 生成将 ω 作为系数的多项式
+
+In [24]:XX = np.linspace(-4, 4, 100)
+
+In [25]:plt.xlabel('X')
+
+In [26]:plt.ylabel('y')
+
+In [27]:plt.title('trained data')
+
+In [28]:plt.grid()
+
+In [29]:plt.scatter(X, y, marker='x', c='red')
+
+In [30]:plt.plot(XX, f(XX), color='green')
+
+In [31]:plt.plot(XX, np.sin(XX), color='blue')
+
+In [32]:plt.show()
+
+4.2.5 函数的多项式拟合
+----------------------------------------
+
+In [33]:omega_2 = np.polyfit(X, y, 5)
+
+In [34]:omega_2
+
+In [35]:f_2 = np.poly1d(omega_2)
+
+In [36]:f = np.poly1d(omega.flatten()[::-1])
+
+In [37]:XX = np.linspace(-4, 4, 100)
+
+In [38]:plt.xlabel('X')
+
+In [39]:plt.ylabel('y')
+
+In [40]:plt.title('using polyfitfunction')
+
+In [41]:plt.grid()
+
+In [42]:plt.scatter(X, y, marker='x', c='red')
+
+In [43]:plt.plot(XX, f(XX), color='green')
+
+In [44]:plt.plot(XX, np.sin(XX), color='blue')
+
+In [45]:plt.show()
+
+4.5 NumPy 神经网络编程（实践篇）
+----------------------------------------
+4.5.2 数据集的准备
+----------------------------------------
+［终端窗口］
+$ wget https://archive.ics.uci.edu/ml/machine-learning-databases/iris/iris.data
+
+［终端窗口］
+$ pip install pandas
+
+In [1]:import numpy as np
+...:import pandas as pd
+...:import matplotlib.pyplot as plt
+...:from mpl_toolkits.mplot3d import Axes3D
+...:df = pd.read_csv('iris.data', header=None) # 读入之前下载的iris.data文件
+...:print(df) # 显示文件的内容
+...:y = df.iloc[0:100,4].values #从数据的内容可以看出，开头的100组数据是Iris setona和Iris virginica的部分，将其中的标签数据单独提取出来
+...:y = np.where(y=='Iris-setona', -1, 1) # 如果标签是Iris setona就转换为–1，如果标签是Iris virginica就转换为1
+...:X = df.iloc[0:100,[0, 1, 2, 3]].values # 1~4号数据是在学习中需要使用的，因此将其提取出来
+
+------------------
+In [1]:可使用的文本
+------------------
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+from mpl_toolkits.mplot3d import Axes3D
+df = pd.read_csv('iris.data', header=None) #读入之前下载的iris.data文件
+print(df) #显示文件的内容
+y = df.iloc[0:100,4].values #从数据的内容可以看出，开头的100组数据是Iris setona和Iris virginica的部分，将其中的标签数据单独提取出来
+y = np.where(y=='Iris-setona', -1, 1) ##从数据的内容可以看出，开头的100组数据是Iris setona和Iris virginica的部分，将其中的标签数据单独提取出来
+X = df.iloc[0:100,[0, 1, 2, 3]].values #  1~4号数据是在学习中需要使用的，因此将其提取出来
+------------------
+
+4.5.3　训练数据和测试数据的划分
+----------------------------------------
+In [2]:X_train = np.empty((80, 4)) # 创建用于存放数据的空数组
+...:X_test = np.empty((20, 4))
+...:y_train = np.empty(80)
+...:y_test = np.empty(20)
+...:X_train[:40],X_train[40:] = X[:40],X[50:90]
+...:X_test[:10],X_test[10:] = X[40:50],X[90:100]
+...:y_train[:40],y_train[40:] = y[:40],y[50:90]
+...:y_test[:10],y_test[10:] = y[40:50],y[90:100]
+
+------------------
+In [2]:易利用的文本
+------------------
+X_train = np.empty((80, 4)) # 创建用于存放数据的空数组
+X_test = np.empty((20, 4))
+y_train = np.empty(80)
+y_test = np.empty(20)
+X_train[:40],X_train[40:] = X[:40],X[50:90]
+X_test[:10],X_test[10:] = X[40:50],X[90:100]
+y_train[:40],y_train[40:] = y[:40],y[50:90]
+y_test[:10],y_test[10:] = y[40:50],y[90:100]
+------------------
+
+In [3]:plt.title('Sepal') # がく片
+...:plt.xlabel('length[cm]')
+...:plt.ylabel('width[cm]')
+...:plt.scatter(X_train[:40, 0], X_train[:40, 1],marker='x', color='blue', label='Iris setosa')
+...:plt.scatter(X_train[40:, 0], X_train[40:, 1],marker='o', color='red', label='Iris virginica')
+...:plt.legend()
+...:plt.show()
+...:
+...:#  接下来是花瓣
+...:plt.title('Petal') #  花瓣
+...:plt.xlabel('length[cm]')
+...:plt.ylabel('width[cm]')
+...:plt.scatter(X_train[:40,2], X_train[:40, 3],marker='x', color='blue', label='Iris setosa')
+...:plt.scatter(X_train[40:, 2], X_train[40:, 3],marker='o', color='red', label='Iris virginica')
+...:plt.legend()
+...:plt.show()
+
+------------------
+In [3]:可使用的文本
+------------------
+plt.title('Sepal') # 萼片
+plt.xlabel('length[cm]')
+plt.ylabel('width[cm]')
+plt.scatter(X_train[:40, 0], X_train[:40, 1],marker='x', color='blue', label='Iris setosa')
+plt.scatter(X_train[40:, 0], X_train[40:, 1],marker='o', color='red', label='Iris virginica')
+plt.legend()
+plt.show()
+
+# 接下来是花瓣
+plt.title('Petal') #花瓣
+plt.xlabel('length[cm]')
+plt.ylabel('width[cm]')
+plt.scatter(X_train[:40,2], X_train[:40, 3],marker='x', color='blue', label='Iris setosa')
+plt.scatter(X_train[40:, 2], X_train[40:, 3],marker='o', color='red', label='Iris virginica')
+plt.legend()
+plt.show()
+------------------
+
+4.5.4　神经网络的构建
+----------------------------------------
+In [4]:def sigmoid(x):
+...:    return 1/(1+np.exp(-x))
+...:
+...:def activation(X, w, b):
+...:    return sigmoid(np.dot(X, w)+b)
+...:
+...:def loss(X, y, w, b):
+...:    dif = y - activation(X, w, b)
+...:    return np.sum(dif**2/(2*len(y)),keepdims=True)
+...:
+...:def accuracy(X, y, w, b):
+...:    pre = predict(X, w, b)
+...:    return np.sum(np.where(pre==y, 1, 0))/len(y)
+...:
+...:def predict(X, w, b):
+...:    result = np.where(activation(X, w, b)<0.5, -1.0, 1.0)
+...:    return result
+...:
+...:def update(X, y, w, b, eta): #  对权重进行更新，其中eta为学习率
+...:    a = (activation(X, w, b)-y)*activation(X, w, b)*(1-activation(X, w, b))
+...:    a = a.reshape(-1, 1)
+...:    w -= eta * 1/float(len(y))*np.sum(a*X, axis=0)
+...:    b -= eta * 1/float(len(y))*np.sum(a)
+...:    return w, b
+...:
+...:def update_2(X, y, w, b, eta): #将w和b的值分别稍微调大时，用偏微分计算输出值的变化情况
+...:    h = 1e-4
+...:    loss_origin = loss(X, y, w, b)
+...:    delta_w = np.zeros_like(w)
+...:    delta_b = np.zeros_like(b)
+...:    for i in range(4):
+...:        tmp = w[i]
+...:        w[i] += h # 将参数中的一个值稍微调大一点
+...:        loss_after = loss(X, y, w, b)
+...:        delta_w[i] = eta*(loss_after - loss_origin)/h
+...:        w[i] = tmp
+...:    tmp = b
+...:    b += h
+...:    loss_after = loss(X, y, w, b)
+...:    delta_b = eta*(loss_after - loss_origin)/h
+...:    w -= delta_w # 更新参数值
+...:    b = tmp - delta_b
+...:    return w, b
+
+------------------
+In [4]:可使用的文本
+------------------
+def sigmoid(x):
+    return 1/(1+np.exp(-x))
+
+def activation(X, w, b):
+    return sigmoid(np.dot(X, w)+b)
+
+def loss(X, y, w, b):
+    dif = y - activation(X, w, b)
+    return np.sum(dif**2/(2*len(y)),keepdims=True)
+
+def accuracy(X, y, w, b):
+    pre = predict(X, w, b)
+    return np.sum(np.where(pre==y, 1, 0))/len(y)
+
+def predict(X, w, b):
+    result = np.where(activation(X, w, b)<0.5, -1.0, 1.0)
+    return result
+
+def update(X, y, w, b, eta): # 对权重进行更新，其中eta为学习率
+    a = (activation(X, w, b)-y)*activation(X, w, b)*(1-activation(X, w, b))
+    a = a.reshape(-1, 1)
+    w -= eta * 1/float(len(y))*np.sum(a*X, axis=0)
+    b -= eta * 1/float(len(y))*np.sum(a)
+    return w, b
+
+def update_2(X, y, w, b, eta): # 将w和b的值分别稍微调大时，用偏微分计算输出值的变化情况
+    h = 1e-4
+    loss_origin = loss(X, y, w, b)
+    delta_w = np.zeros_like(w)
+    delta_b = np.zeros_like(b)
+    for i in range(4):
+        tmp = w[i]
+        w[i] += h # 将参数中的一个值稍微调大一点
+        loss_after = loss(X, y, w, b)
+        delta_w[i] = eta*(loss_after - loss_origin)/h
+        w[i] = tmp
+    tmp = b
+    b += h
+    loss_after = loss(X, y, w, b)
+    delta_b = eta*(loss_after - loss_origin)/h
+    w -= delta_w #  更新参数值
+    b = tmp - delta_b
+    return w, b
+------------------
+
+In [5]:weights_1 = np.ones(4)/10 #  w的初始值全部设为0.1
+...:bias_1 = np.ones(1)/10 #  b的初始值也设为0.1
+...:weights_2 = np.ones(4)/10
+...:bias_2 = np.ones(1)/10
+...:for _ in range(15): #先让模型进行15次学习
+...:    weights_1, bias_1 = update(X_train, y_train, weights_1, bias_1, eta=0.1)
+...:    weights_2, bias_2 = update(X_train , y_train, weights_2, bias_2, eta=0.1)
+...:    print('acc_1 %f, loss_1 %f, acc_2 %f, loss_2 %f' % ( accuracy(X_test, y_test, weights_1, bias_1), \
+...:    loss(X_test, y_test, weights_1, bias_1)\
+    ,accuracy(X_test, y_test, weights_2, bias_2), loss(X_test, y_test, weights_2, bias_2)))
+...:print('weights_1 = ', weights_1, 'bias_1 = ', bias_1)
+...:print('weights_2 = ', weights_2, 'bias_2 = ', bias_2)
+
+
+------------------
+In [5]:可使用的文本
+------------------
+weights_1 = np.ones(4)/10 # w的初始值全部设为0.1
+bias_1 = np.ones(1)/10 #b的初始值也设为0.1
+weights_2 = np.ones(4)/10
+bias_2 = np.ones(1)/10
+for _ in range(15): # 先让模型进行15次学习
+    weights_1, bias_1 = update(X_train, y_train, weights_1, bias_1, eta=0.1)
+    weights_2, bias_2 = update(X_train , y_train, weights_2, bias_2, eta=0.1)
+    print('acc_1 %f, loss_1 %f, acc_2 %f, loss_2 %f' % ( accuracy(X_test, y_test, weights_1, bias_1), \
+    loss(X_test, y_test, weights_1, bias_1)\
+    ,accuracy(X_test, y_test, weights_2, bias_2), loss(X_test, y_test, weights_2, bias_2)))
+print('weights_1 = ', weights_1, 'bias_1 = ', bias_1)
+print('weights_2 = ', weights_2, 'bias_2 = ', bias_2)
+------------------
+
+
+4.7 NumPy神经网络编程（文字识别篇）
+----------------------------------------
+4.7.1　基于NumPy的实现 （MNIST）
+----------------------------------------
+［终端窗口］
+$ wget http://yann.lecun.com/exdb/mnist/train-images-idx3-ubyte.gz
+$ wget http://yann.lecun.com/exdb/mnist/train-labels-idx1-ubyte.gz
+$ wget http://yann.lecun.com/exdb/mnist/t10k-images-idx3-ubyte.gz
+$ wget http://yann.lecun.com/exdb/mnist/t10k-labels-idx1-ubyte.gz
+
+In [1]:import load_mnist as lm
+...:dataset = lm.load_mnist()
+
+------------------
+In [1]:可使用的文本
+------------------
+import load_mnist as lm
+dataset = lm.load_mnist()
+------------------
+
+In [2]:import matplotlib.pyplot as plt
+...:
+...:for i in range(20):
+...:    plt.subplot(4, 5, i+1)
+...:    plt.imshow(dataset['x_train'][i,:].reshape(28, 28))
+...:
+...:    plt.show()
+
+------------------
+In [2]:可使用的文本
+------------------
+import matplotlib.pyplot as plt
+
+for i in range(20):
+    plt.subplot(4, 5, i+1)
+    plt.imshow(dataset['x_train'][i,:].reshape(28, 28))
+
+    plt.show()
+------------------
+
+4.7.3　网络的训练
+----------------------------------------
+In [3]:import numpy as np
+...:import neuralnet as nl
+...:import load_mnist
+...:
+...:dataset = load_mnist.load_mnist()
+...:X_train = dataset['x_train']
+...:t_train = dataset['t_train']
+...:X_test = dataset['x_test']
+...:t_test = dataset['t_test']
+...:
+...:weight_list, bias_list = nl.make_params([784, 100, 10])
+...:# 指定进行多少次学习
+...:train_time = 10000
+...:#指定每次学习使用多少个样本数据
+...:batch_size = 1000
+...:# 创建用于记录精度和损失的变化情况的数组
+...:total_acc_list = []
+...:total_loss_list = []
+...:for i in range(train_time):
+...:
+...:    #生成batch_size个0～59999内的随机整数
+...:    ra = np.random.randint(60000, size=batch_size)
+...:    #在这里进行参数的更新操作。eta为学习率，用于决定参数按照多大比例进行更新
+ ...:   # 将学习率设置为2.0
+ ...:   # 在实际中往往需要反复尝试才能确定学习率
+...:    x_batch, t_batch = X_train[ra,:], t_train[ra,:]
+...:    weight_list, bias_list = nl.update(x_batch, weight_list, bias_list, t_batch, eta=2.0)
+...:    #每学习5次对学习进度进行确认
+...:    if (i+1)%100 == 0:
+...:        acc_list = []
+...:        loss_list = []
+...:        for k in range(10000//batch_size):
+...:            x_batch, t_batch = X_test[k*batch_size:(k+1)*batch_size, :], t_test[k*batch_size:(k+1)*batch_size, :]
+...:            acc_val = nl.accuracy(x_batch, weight_list, bias_list, t_batch)
+...:            loss_val = nl.loss(x_batch, weight_list, bias_list, t_batch)
+...:            acc_list.append(acc_val)
+...:            loss_list.append(loss_val)
+...:        #计算精度的平均值
+...:        acc = np.mean(acc_list)
+...:        # 计算损失总和
+...:        loss = np.mean(loss_list)
+...:        total_acc_list.append(acc)
+...:        total_loss_list.append(loss)
+...:        print("Time: %d, Accuracy: %f, Loss: %f"%(i+1, acc, loss))
+
+
+------------------
+In [3]:可使用的文本
+------------------
+import numpy as np
+import neuralnet as nl
+import load_mnist
+
+dataset = load_mnist.load_mnist()
+X_train = dataset['x_train']
+t_train = dataset['t_train']
+X_test = dataset['x_test']
+t_test = dataset['t_test']
+
+weight_list, bias_list = nl.make_params([784, 100, 10])
+# 指定进行多少次学习
+train_time = 10000
+# 指定每次学习使用多少个样本数据
+batch_size = 1000
+#创建用于记录精度和损失的变化情况的数组
+total_acc_list = []
+total_loss_list = []
+for i in range(train_time):
+
+    #  生成batch_size个0～59999内的随机整数
+    ra = np.random.randint(60000, size=batch_size)
+    # 在这里进行参数的更新操作。eta为学习率，用于决定参数按照多大比例进行更新
+    # 将学习率设置为2.0
+    # 在实际中往往需要反复尝试才能确定学习率
+    x_batch, t_batch = X_train[ra,:], t_train[ra,:]
+    weight_list, bias_list = nl.update(x_batch, weight_list, bias_list, t_batch, eta=2.0)
+    # 每学习5次对学习进度进行确认
+    if (i+1)%100 == 0:
+        acc_list = []
+        loss_list = []
+        for k in range(10000//batch_size):
+            x_batch, t_batch = X_test[k*batch_size:(k+1)*batch_size, :], t_test[k*batch_size:(k+1)*batch_size, :]
+            acc_val = nl.accuracy(x_batch, weight_list, bias_list, t_batch)
+            loss_val = nl.loss(x_batch, weight_list, bias_list, t_batch)
+            acc_list.append(acc_val)
+            loss_list.append(loss_val)
+        # 计算精度的平均值
+        acc = np.mean(acc_list)
+        # 计算损失总和
+        loss = np.mean(loss_list)
+        total_acc_list.append(acc)
+        total_loss_list.append(loss)
+        print("Time: %d, Accuracy: %f, Loss: %f"%(i+1, acc, loss))
+------------------
+
+In [4]:import matplotlib.pyplot as plt
+...:plt.subplot(211)
+...:plt.plot(np.arange(0, train_time, 100),total_acc_list)
+...:plt.title('accuracy')
+...:plt.subplot(212)
+...:plt.plot(np.arange(0, train_time, 100), total_loss_list)
+...:plt.title('loss')
+...:plt.tight_layout()
+...:plt.show()
+
+------------------
+In [4]:可使用的文本
+------------------
+import matplotlib.pyplot as plt
+plt.subplot(211)
+plt.plot(np.arange(0, train_time, 100),total_acc_list)
+plt.title('accuracy')
+plt.subplot(212)
+plt.plot(np.arange(0, train_time, 100), total_loss_list)
+plt.title('loss')
+plt.tight_layout()
+plt.show()
+------------------
+
+4.8 NumPy神经网络编程（强化学习篇）
+----------------------------------------
+4.8.2　　游戏的安装与执行
+----------------------------------------
+［终端窗口］
+$ pip install gym
+
+In [1]:import gym
+...:env = gym.make("CartPole-v0")
+
+------------------
+In [1]:可使用的文本
+------------------
+import gym
+env = gym.make("CartPole-v0")
+------------------
+
+In [2]:observation = env.reset()
+
+In [3]:action = 1 # 先尝试往右推底座
+...:observation, reward, done, info = env.step(action) #  执行step函数就会返回采取行动后的状态、报酬、游戏是否已经结束、信息4个变量
+
+------------------
+In [3]:可使用的文本
+------------------
+action = 1 #先尝试往右推底座
+observation, reward, done, info = env.step(action) #  执行step函数就会返回采取行动后的状态、报酬、游戏是否已经结束、信息4个变量
+------------------
+
+In [4]:env.render()
+
+In [5]:import numpy as np
+...:observation = env.reset()
+...:
+...:for k in range(100):
+...:    env.render()
+...:    #用0或1随机执行
+...:    observation, reward, done, info=env.step(np.random.randint(1))
+...:# 游戏结束时需要调用env.close方法
+...:env.close()
+
+------------------
+In [5]:可使用的文本
+------------------
+import numpy as np
+observation = env.reset()
+
+for k in range(100):
+    env.render()
+    #  用0或1随机执行
+    observation, reward, done, info=env.step(np.random.randint(1))
+# 游戏结束时需要调用env.close方法
+env.close()
+------------------
+
+4.8.3　Q学习
+----------------------------------------
+［终端窗口］
+$ python cartpole1.py
+
+［终端窗口］
+$ python cartpole2.py
+
+［终端窗口］
+$ python cartpole3.py
+
+［终端窗口］
+$ python cartpole4.py
+
+［终端窗口］
+$ python cartpole5.py
