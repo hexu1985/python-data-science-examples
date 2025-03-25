@@ -15,6 +15,7 @@
     - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
 
 + 机器学习
+    - [机器学习图解](Grokking.Machine.Learning)
 
 + 深度学习
     - [深度学习入门：基于Python的理论与实现](Deep.Learning.From.Scratch)
