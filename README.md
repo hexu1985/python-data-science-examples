@@ -20,4 +20,5 @@
 + 深度学习
     - [深度学习入门：基于Python的理论与实现](Deep.Learning.From.Scratch)
     - [Pytorch深度学习指南](Pytorch.Step.By.Step)
+    - [深度学习图解](Grokking.Deep.Learning)
 
