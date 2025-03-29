@@ -14,6 +14,9 @@
     - [Python数据可视化之matplotlib精进](Matplotlib.Enchance)
     - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
 
++ pandas
+    - [Pandas数据预处理详解](Pandas.Data.Preprocessing.Explanation)
+
 + 机器学习
     - [机器学习图解](Grokking.Machine.Learning)
 
