@@ -342,7 +342,7 @@ In [18]:b.max(axis=1) # 求取各个二维数组的行方向上的最大值
 
 In [19]:b.max(axis=2) #  求取各个二维数组的列方向上的最大值
 
-In [20]:b = np.arange(10, dtype=np.float)
+In [20]:b = np.arange(10, dtype=np.float64)
 
 In [21]:b[3] = np.NaN # 将NaN代入
 
