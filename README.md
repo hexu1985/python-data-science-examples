@@ -6,13 +6,9 @@
     - [用Python编程和实践!数学教科书](Python.Math.Textbook)
     - [程序员的数学基础 python实战](Math.Fundamentals.For.Programmers.Using.Python)
 
-+ matplotlib
-    - [Python数据可视化之matplotlib实践](Matplotlib.Practice)
-    - [Python数据可视化之matplotlib精进](Matplotlib.Enchance)
-    - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
-
 + 数值计算
     - [Numpy数据处理详解](Numpy.Data.Processing.Detailed.Explanation)
     - [Pandas数据预处理详解](Pandas.Data.Preprocessing.Explanation)
+    - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
     - [Python应用数值方法](Applied.Numerical.Methods.With.Python)
 
