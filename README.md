@@ -7,8 +7,11 @@
     - [程序员的数学基础 python实战](Math.Fundamentals.For.Programmers.Using.Python)
 
 + 数值计算
+    - [Python应用数值方法](Applied.Numerical.Methods.With.Python)
+
++ 数据科学
     - [Numpy数据处理详解](Numpy.Data.Processing.Detailed.Explanation)
     - [Pandas数据预处理详解](Pandas.Data.Preprocessing.Explanation)
     - [Python数据可视化编程实战](Python.Data.Visualization.Cookbook)
-    - [Python应用数值方法](Applied.Numerical.Methods.With.Python)
+    - [Python数据科学手册](Python.Data.Science.Handbook)
 
