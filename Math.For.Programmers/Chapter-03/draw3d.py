@@ -9,17 +9,28 @@ from mpl_toolkits.mplot3d.art3d import Poly3DCollection
 from colors import *
 
 ## https://stackoverflow.com/a/22867877/1704140
+#class FancyArrow3D(FancyArrowPatch):
+#    def __init__(self, xs, ys, zs, *args, **kwargs):
+#        FancyArrowPatch.__init__(self, (0,0), (0,0), *args, **kwargs)
+#        self._verts3d = xs, ys, zs
+#
+#    def draw(self, renderer):
+#        xs3d, ys3d, zs3d = self._verts3d
+#        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
+#        self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
+#        FancyArrowPatch.draw(self, renderer)
+
 class FancyArrow3D(FancyArrowPatch):
     def __init__(self, xs, ys, zs, *args, **kwargs):
-        FancyArrowPatch.__init__(self, (0,0), (0,0), *args, **kwargs)
+        super().__init__((0,0), (0,0), *args, **kwargs)
         self._verts3d = xs, ys, zs
 
-    def draw(self, renderer):
+    def do_3d_projection(self, renderer=None):
         xs3d, ys3d, zs3d = self._verts3d
-        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, renderer.M)
+        xs, ys, zs = proj3d.proj_transform(xs3d, ys3d, zs3d, self.axes.M)
         self.set_positions((xs[0],ys[0]),(xs[1],ys[1]))
-        FancyArrowPatch.draw(self, renderer)
 
+        return min(zs)
 
 class Polygon3D():
     def __init__(self, *vertices, color=blue):
