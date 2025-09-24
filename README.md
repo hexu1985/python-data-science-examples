@@ -5,6 +5,7 @@
     - [用Python学数学](Math.Adventures.With.Python)
     - [用Python编程和实践!数学教科书](Python.Math.Textbook)
     - [程序员的数学基础 python实战](Math.Fundamentals.For.Programmers.Using.Python)
+    - [程序员数学 用Python学透线性代数和微积分](Math.For.Programmers)
 
 + 数值计算
     - [Python应用数值方法](Applied.Numerical.Methods.With.Python)
